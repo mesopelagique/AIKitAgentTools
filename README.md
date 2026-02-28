@@ -245,6 +245,7 @@ Ideas for tools that could be added in the future:
 | **Planning** | Break a user goal into ordered, executable steps for an autonomous agent. Sends the goal to an LLM client that returns a structured plan the agent can follow step by step. |
 | **Calendar** | Read/create/update calendar events via 4D NetKit (Google Calendar, Microsoft Outlook). |
 | **Gmail / Outlook Mail** | Extend `AIToolMail` with 4D NetKit OAuth2 providers for Gmail and Microsoft 365, replacing raw SMTP. |
+| **PTY Shell** | Execute bash commands in a real terminal PTY session using [PTY4DPlugin](https://github.com/mesopelagique/PTY4DPlugin). Unlike `AIToolCommand` (which uses `4D.SystemWorker`), a PTY session supports interactive programs, ANSI output, and persistent shell state across calls — closer to a human developer's terminal experience. |
 | **Notification** | Send push notifications, Slack messages, or webhook calls to alert users of agent progress. |
 
 > Contributions and ideas welcome — open an issue or PR.
