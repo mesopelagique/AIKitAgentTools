@@ -7,7 +7,7 @@ Unlike the other `AITool*` classes that are self-contained, `AIToolImage` requir
 ## Quick start
 
 ```4d
-var $client:=cs.OpenAI.new()
+var $client:=cs.AIKit.OpenAI.new()
 var $tool:=cs.AIToolImage.new($client)
 $helper.registerTools($tool)
 ```
@@ -20,7 +20,7 @@ cs.AIToolImage.new($client : Object {; $config : Object})
 
 | Parameter | Type | Description |
 |---|---|---|
-| `$client` | Object | **Required.** An `OpenAI` client instance (`cs.OpenAI.new()`) |
+| `$client` | Object | **Required.** An `OpenAI` client instance (`cs.AIKit.OpenAI.new()`) |
 | `$config` | Object | Optional configuration (see below) |
 
 ### Configuration options
@@ -66,7 +66,7 @@ cs.AIToolImage.new($client : Object {; $config : Object})
 ## Example — standalone
 
 ```4d
-var $client:=cs.OpenAI.new()
+var $client:=cs.AIKit.OpenAI.new()
 var $tool:=cs.AIToolImage.new($client; {\
   defaultModel: "dall-e-3"; \
   outputFolder: Folder("/PACKAGE/images")\
@@ -79,7 +79,7 @@ var $result:=$tool.generate_image({prompt: "A futuristic city at sunset"})
 ## Example — with chat helper
 
 ```4d
-var $client:=cs.OpenAI.new()
+var $client:=cs.AIKit.OpenAI.new()
 var $tool:=cs.AIToolImage.new($client; {\
   allowedModels: New collection("dall-e-3"); \
   outputFolder: Folder(Temporary folder; fk platform path).folder("ai_images")\

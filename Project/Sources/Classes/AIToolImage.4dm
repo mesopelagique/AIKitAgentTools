@@ -6,7 +6,7 @@
 // Security: prompt length cap, model whitelist, size whitelist, output folder restriction
 //
 // Usage:
-//   var $client:=cs.OpenAI.new()
+//   var $client:=cs.AIKit.OpenAI.new()
 //   var $tool:=cs.AIToolImage.new($client; {outputFolder: Folder("/PACKAGE/images")})
 //   $helper.registerTools($tool)
 

@@ -81,7 +81,7 @@ Test the SMTP server connection without sending anything.
 ## Example — Email Notification Agent
 
 ```4d
-var $client:=cs.OpenAI.new()
+var $client:=cs.AIKit.OpenAI.new()
 
 var $transporter:=SMTP New transporter({ \
   host: "smtp.company.com"; \

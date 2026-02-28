@@ -122,7 +122,7 @@ If using database persistence, create a dataclass with at least these attributes
 ## Example — In-Memory Agent
 
 ```4d
-var $client:=cs.OpenAI.new()
+var $client:=cs.AIKit.OpenAI.new()
 var $memory:=cs.AIToolMemory.new()
 
 var $helper:=$client.chat.create("You are a helpful assistant with memory. " + \
@@ -145,7 +145,7 @@ $helper.prompt("What's my name?")
 ## Example — Database-Persisted Agent
 
 ```4d
-var $client:=cs.OpenAI.new()
+var $client:=cs.AIKit.OpenAI.new()
 var $memory:=cs.AIToolMemory.new({ \
   dataclass: "AgentMemory"; \
   maxEntries: 10000 \

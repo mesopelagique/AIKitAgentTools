@@ -37,7 +37,7 @@ echo "sk-your-api-key-here" > ~/.openai
 Each tool class follows the same pattern — it exposes a `tools` collection and handler methods matching tool names. Registration is a single call:
 
 ```4d
-var $client:=cs.OpenAI.new()
+var $client:=cs.AIKit.OpenAI.new()
 var $helper:=$client.chat.create("You are a helpful assistant."; {model: "gpt-4o-mini"})
 $helper.autoHandleToolCalls:=True
 
