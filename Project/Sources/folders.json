@@ -1,4 +1,10 @@
 {
+	"demos": {
+		"methods": [
+			"demo_agent",
+			"demo_research"
+		]
+	},
 	"tests": {
 		"methods": [
 			"test_calculator",
@@ -6,6 +12,7 @@
 			"test_data",
 			"test_filesystem",
 			"test_image",
+			"test_mail",
 			"test_memory",
 			"test_search",
 			"test_web_fetch",
