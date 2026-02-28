@@ -1,0 +1,16 @@
+{
+	"version": 2130,
+	"dependencies": {
+		"4D AIKit": {
+			"github": "4d/4D-AIKit",
+			"version": "4d"
+		},
+		"ExpressionLanguage": {
+			"github": "mesopelagique/ExpressionLanguage"
+		},
+		"4D NetKit": {
+			"github": "4d/4D-NetKit",
+			"version": "4d"
+		}
+	}
+}

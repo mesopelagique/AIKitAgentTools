@@ -1,0 +1,16 @@
+{
+	"tests": {
+		"methods": [
+			"test_calculator",
+			"test_command",
+			"test_data",
+			"test_filesystem",
+			"test_image",
+			"test_memory",
+			"test_search",
+			"test_web_fetch",
+			"TestOpenAI"
+		]
+	},
+	"trash": {}
+}
