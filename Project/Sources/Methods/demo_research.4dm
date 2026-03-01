@@ -16,9 +16,9 @@ End if
 // 1. Configure tools — search + web fetch only
 // -----------------------------------------------------------------
 
-var $search:=cs.AIToolSearch.new({maxResults: 5})
+var $search:=cs.agtools.AITToolSearch.new({maxResults: 5})
 
-var $webFetch:=cs.AIToolWebFetch.new({\
+var $webFetch:=cs.agtools.AITToolWebFetch.new({\
 	allowedDomains: ["*.4d.com"; "developer.4d.com"; "blog.4d.com"; "discuss.4d.com"]; \
 	timeout: 15; \
 	maxResponseSize: 30000\

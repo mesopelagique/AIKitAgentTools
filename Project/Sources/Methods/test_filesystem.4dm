@@ -11,7 +11,7 @@ var $sandbox:=Folder(Temporary folder; fk platform path).folder("AIToolTest_"+St
 $sandbox.create()
 
 // --- Create file system tool (sandboxed + read-write) ---
-var $tool:=cs.AIToolFileSystem.new({\
+var $tool:=cs.agtools.AITToolFileSystem.new({\
 allowedPaths: [$sandbox.path]; \
 readOnly: False; \
 maxFileSize: 100000\

@@ -8,7 +8,7 @@
 // Security: sandboxed expression evaluator, no code execution, expression length cap
 //
 // Usage:
-//   var $tool:=cs.AIToolCalculator.new()
+//   var $tool:=cs.agtools.AITToolCalculator.new()
 //   $helper.registerTools($tool)
 
 property tools : Collection

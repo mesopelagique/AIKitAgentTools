@@ -11,8 +11,8 @@ End if
 // -----------------------------------------------------------------
 // 1. Basic instantiation
 // -----------------------------------------------------------------
-var $tool:=cs.AIToolImage.new($client)
-ASSERT(OB Instance of($tool; cs.AIToolImage); "Must be AIToolImage instance")
+var $tool:=cs.agtools.AITToolImage.new($client)
+ASSERT(OB Instance of($tool; cs.agtools.AITToolImage); "Must be AIToolImage instance")
 ASSERT($tool.tools.length=1; "Must expose 1 tool (generate_image)")
 ASSERT($tool.tools[0].name="generate_image"; "Tool name must be generate_image")
 ASSERT($tool.defaultModel="dall-e-3"; "Default model must be dall-e-3")
@@ -24,7 +24,7 @@ ASSERT($tool.defaultSize="1024x1024"; "Default size must be 1024x1024")
 var $outputFolder:=Folder(Temporary folder; fk platform path).folder("ai_image_test")
 $outputFolder.create()
 
-var $tool2:=cs.AIToolImage.new($client; {\
+var $tool2:=cs.agtools.AITToolImage.new($client; {\
 defaultModel: "dall-e-2"; \
 defaultSize: "512x512"; \
 maxPromptLength: 500; \
@@ -59,7 +59,7 @@ ASSERT($parsed.error#Null; "Must report prompt length error @"+$parsed.error)
 // -----------------------------------------------------------------
 // 5. Validation — disallowed model
 // -----------------------------------------------------------------
-var $tool3:=cs.AIToolImage.new($client; {allowedModels: New collection("dall-e-3")})
+var $tool3:=cs.agtools.AITToolImage.new($client; {allowedModels: New collection("dall-e-3")})
 $res:=$tool3.generate_image({prompt: "A cat"; model: "dall-e-2"})
 $parsed:=JSON Parse($res)
 ASSERT(Not(Bool($parsed.success)); "Disallowed model must fail")
@@ -67,7 +67,7 @@ ASSERT(Not(Bool($parsed.success)); "Disallowed model must fail")
 // -----------------------------------------------------------------
 // 6. Validation — disallowed size
 // -----------------------------------------------------------------
-var $tool4:=cs.AIToolImage.new($client; {allowedSizes: New collection("1024x1024")})
+var $tool4:=cs.agtools.AITToolImage.new($client; {allowedSizes: New collection("1024x1024")})
 $res:=$tool4.generate_image({prompt: "A cat"; size: "256x256"})
 $parsed:=JSON Parse($res)
 ASSERT(Not(Bool($parsed.success)); "Disallowed size must fail")

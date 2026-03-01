@@ -33,7 +33,7 @@ Creates a new `AIToolWebFetch` instance.
 
 ```4d
 // Restricted to specific domains (recommended)
-var $tool:=cs.AIToolWebFetch.new({ \
+var $tool:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["*.wikipedia.org"; "api.github.com"]; \
   timeout: 15; \
   maxResponseSize: 50000 \
@@ -42,7 +42,7 @@ var $tool:=cs.AIToolWebFetch.new({ \
 
 ```4d
 // REST API tool with POST support
-var $tool:=cs.AIToolWebFetch.new({ \
+var $tool:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["api.example.com"]; \
   allowedMethods: New collection("GET"; "POST"); \
   timeout: 20 \
@@ -76,7 +76,7 @@ Fetches content from a URL via HTTP. Validates the URL scheme, checks domain whi
 #### Example — Simple GET
 
 ```4d
-var $tool:=cs.AIToolWebFetch.new({allowedDomains: ["httpbin.org"]})
+var $tool:=cs.agtools.AITToolWebFetch.new({allowedDomains: ["httpbin.org"]})
 
 var $helper:=$client.chat.create("You can fetch web pages."; {model: "gpt-4o-mini"})
 $helper.autoHandleToolCalls:=True
@@ -88,7 +88,7 @@ var $result:=$helper.prompt("Fetch https://httpbin.org/html and summarize it.")
 #### Example — REST API with POST
 
 ```4d
-var $tool:=cs.AIToolWebFetch.new({ \
+var $tool:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["api.example.com"]; \
   allowedMethods: New collection("GET"; "POST"; "DELETE") \
 })
@@ -103,7 +103,7 @@ var $result:=$helper.prompt("Create a new user with name 'Alice' by POSTing to h
 #### Example — Direct call with custom headers
 
 ```4d
-var $tool:=cs.AIToolWebFetch.new({ \
+var $tool:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["api.github.com"]; \
   allowedMethods: New collection("GET") \
 })

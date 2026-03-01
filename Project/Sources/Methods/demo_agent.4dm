@@ -16,33 +16,33 @@ End if
 // -----------------------------------------------------------------
 
 // Web fetch — restricted to specific domains
-var $webFetch:=cs.AIToolWebFetch.new({\
+var $webFetch:=cs.agtools.AITToolWebFetch.new({\
 allowedDomains: ["*.wikipedia.org"; "httpbin.org"; "*.github.com"]; \
 timeout: 15; \
 maxResponseSize: 20000\
 })
 
 // Search — limit result count
-var $search:=cs.AIToolSearch.new({maxResults: 3})
+var $search:=cs.agtools.AITToolSearch.new({maxResults: 3})
 
 // File system — sandboxed to a temp directory
 var $sandbox:=Folder(Temporary folder; fk platform path).folder("ai_agent_demo")
 $sandbox.create()
 
-var $fileSystem:=cs.AIToolFileSystem.new({\
+var $fileSystem:=cs.agtools.AITToolFileSystem.new({\
 allowedPaths: [$sandbox.path]; \
 readOnly: False; \
 deniedPaths: ["*.env"; "*.key"; "*.secret"]\
 })
 
 // Command — only safe read-only commands
-var $command:=cs.AIToolCommand.new({\
+var $command:=cs.agtools.AITToolCommand.new({\
 allowedCommands: ["echo"; "date"; "ls"; "cat"; "wc"; "head"; "tail"]; \
 timeout: 10\
 })
 
 // Data — read-only access (adjust allowedDataclasses for your database)
-var $data:=cs.AIToolData.new({\
+var $data:=cs.agtools.AITToolData.new({\
 maxRecords: 20; \
 readOnly: True\
 })
@@ -51,7 +51,7 @@ readOnly: True\
 var $imageFolder:=Folder(Temporary folder; fk platform path).folder("ai_agent_images")
 $imageFolder.create()
 
-var $image:=cs.AIToolImage.new($client; {\
+var $image:=cs.agtools.AITToolImage.new($client; {\
 defaultModel: "dall-e-3"; \
 allowedSizes: New collection("512x512"; "1024x1024"); \
 maxPromptLength: 2000; \
@@ -59,14 +59,14 @@ outputFolder: $imageFolder\
 })
 
 // Calculator — safe math expressions (sandboxed, no code execution)
-var $calculator:=cs.AIToolCalculator.new()
+var $calculator:=cs.agtools.AITToolCalculator.new()
 
 // Memory — in-memory key-value store for agent context
-var $memory:=cs.AIToolMemory.new({maxEntries: 100; maxValueLength: 5000})
+var $memory:=cs.agtools.AITToolMemory.new({maxEntries: 100; maxValueLength: 5000})
 
 // Mail — SMTP email (disabled by default — uncomment and configure to enable)
 // var $smtpServer:={host: "smtp.example.com"; port: 587; user: "bot@example.com"; password: "your-password"}
-// var $mail:=cs.AIToolMail.new($smtpServer; {\
+// var $mail:=cs.agtools.AITToolMail.new($smtpServer; {\
 //   fromAddress: "bot@example.com"; \
 //   fromName: "AI Assistant"; \
 //   allowedRecipientDomains: New collection("example.com"); \

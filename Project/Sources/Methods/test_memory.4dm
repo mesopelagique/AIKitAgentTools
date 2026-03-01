@@ -4,8 +4,8 @@
 // =================================================================
 // 1. Basic instantiation (in-memory, default config)
 // =================================================================
-var $tool:=cs.AIToolMemory.new()
-ASSERT:C1129(OB Instance of:C1731($tool; cs.AIToolMemory); "Must be AIToolMemory instance")
+var $tool:=cs.agtools.AITToolMemory.new()
+ASSERT:C1129(OB Instance of:C1731($tool; cs.agtools.AITToolMemory); "Must be AIToolMemory instance")
 ASSERT:C1129($tool.tools.length=4; "Must expose 4 tools (store, retrieve, list, delete)")
 ASSERT:C1129($tool.tools[0].name="memory_store"; "Tool 0 = memory_store")
 ASSERT:C1129($tool.tools[1].name="memory_retrieve"; "Tool 1 = memory_retrieve")
@@ -19,7 +19,7 @@ ASSERT:C1129($tool._persistent=False; "Default mode = in-memory (not persistent)
 // =================================================================
 // 2. Custom config
 // =================================================================
-var $tool2:=cs.AIToolMemory.new({maxEntries: 10; maxKeyLength: 50; maxValueLength: 500})
+var $tool2:=cs.agtools.AITToolMemory.new({maxEntries: 10; maxKeyLength: 50; maxValueLength: 500})
 ASSERT:C1129($tool2.maxEntries=10; "Custom maxEntries = 10")
 ASSERT:C1129($tool2.maxKeyLength=50; "Custom maxKeyLength = 50")
 ASSERT:C1129($tool2.maxValueLength=500; "Custom maxValueLength = 500")
@@ -122,7 +122,7 @@ ASSERT:C1129(Position:C15("Error"; $res)>0; "Retrieve with no params must fail: 
 // =================================================================
 // 14. Entry limit enforcement
 // =================================================================
-var $limitTool:=cs.AIToolMemory.new({maxEntries: 2})
+var $limitTool:=cs.agtools.AITToolMemory.new({maxEntries: 2})
 $limitTool.memory_store({key: "a"; value: "1"})
 $limitTool.memory_store({key: "b"; value: "2"})
 $res:=$limitTool.memory_store({key: "c"; value: "3"})
@@ -144,7 +144,7 @@ ASSERT:C1129(Position:C15("Deploy release"; $res)>0; "Tag search must find match
 // =================================================================
 // 16. Persistent mode config (just verify config, no actual DB)
 // =================================================================
-var $dbTool:=cs.AIToolMemory.new({\
+var $dbTool:=cs.agtools.AITToolMemory.new({\
 	dataclass: "AgentMemory"; \
 	fields: {key: "memKey"; value: "memValue"; category: "memCat"}\
 	})

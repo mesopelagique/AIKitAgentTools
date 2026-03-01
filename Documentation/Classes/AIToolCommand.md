@@ -30,7 +30,7 @@ The `AIToolCommand` class provides shell command execution via `4D.SystemWorker`
 
 ```4d
 // Allow only safe read-only commands
-var $tool:=cs.AIToolCommand.new({ \
+var $tool:=cs.agtools.AITToolCommand.new({ \
   allowedCommands: ["echo"; "date"; "ls"; "cat"; "wc"; "head"; "tail"]; \
   timeout: 10 \
 })
@@ -70,7 +70,7 @@ Executes a shell command after validating it against the whitelist and checking 
 #### Example
 
 ```4d
-var $tool:=cs.AIToolCommand.new({ \
+var $tool:=cs.agtools.AITToolCommand.new({ \
   allowedCommands: ["echo"; "date"; "ls"] \
 })
 

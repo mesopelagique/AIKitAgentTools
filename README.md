@@ -18,23 +18,19 @@ A collection of ready-to-use AI tools for [4D AIKit](https://github.com/4d/4D-AI
 | **Memory** | `AIToolMemory` | Key-value memory store for agents | In-memory / ORDA |
 | **Mail** | `AIToolMail` | Send emails via SMTP | `4D.SMTPTransporter` |
 
+## Requirements
+
+- [4D AIKit](https://github.com/4d/4D-AIKit) (already declared in `Project/Sources/dependencies.json`)
+- [ExpressionLanguage](https://github.com/mesopelagique/ExpressionLanguage) for `AIToolCalculator` (already declared in `Project/Sources/dependencies.json`)
+- OpenAI API key in `~/.openai` for tests and demo (or edit `TestOpenAI`)
+
 ## Quick Start
 
-### 1. Add 4D AIKit as a dependency
-
-This project depends on [4D AIKit](https://github.com/nicgorski/4D-AIKit). The dependency is already declared in `Project/Sources/dependencies.json`.
-
-### 2. Set up your API key
-
-Create a file `~/.openai` containing your OpenAI API key:
-
-```bash
-echo "sk-your-api-key-here" > ~/.openai
-```
-
-### 3. Register a tool
+### 1. Register a tool
 
 Each tool class follows the same pattern — it exposes a `tools` collection and handler methods matching tool names. Registration is a single call:
+
+> Note: this runnable example uses an OpenAI client/helper, so it needs an API key.
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new()
@@ -42,7 +38,7 @@ var $helper:=$client.chat.create("You are a helpful assistant."; {model: "gpt-4o
 $helper.autoHandleToolCalls:=True
 
 // Create and register a tool
-var $webFetch:=cs.AIToolWebFetch.new({ \
+var $webFetch:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["*.wikipedia.org"; "httpbin.org"] \
 })
 $helper.registerTools($webFetch)
@@ -51,17 +47,17 @@ $helper.registerTools($webFetch)
 var $result:=$helper.prompt("Fetch https://httpbin.org/html and summarize it.")
 ```
 
-### 4. Combine multiple tools
+### 2. Combine multiple tools
 
 ```4d
 // Register all tools on a single helper
-$helper.registerTools(cs.AIToolWebFetch.new({allowedDomains: ["*.wikipedia.org"]}))
-$helper.registerTools(cs.AIToolSearch.new({maxResults: 3}))
-$helper.registerTools(cs.AIToolFileSystem.new({allowedPaths: ["/tmp/sandbox/"]; readOnly: False}))
-$helper.registerTools(cs.AIToolCommand.new({allowedCommands: ["echo"; "date"; "ls"]}))
-$helper.registerTools(cs.AIToolData.new({allowedDataclasses: ["Product"]; maxRecords: 20}))
-$helper.registerTools(cs.AIToolImage.new($client; {outputFolder: Folder("/PACKAGE/images")}))
-$helper.registerTools(cs.AIToolCalculator.new())
+$helper.registerTools(cs.agtools.AITToolWebFetch.new({allowedDomains: ["*.wikipedia.org"]}))
+$helper.registerTools(cs.agtools.AITToolSearch.new({maxResults: 3}))
+$helper.registerTools(cs.agtools.AITToolFileSystem.new({allowedPaths: ["/tmp/sandbox/"]; readOnly: False}))
+$helper.registerTools(cs.agtools.AITToolCommand.new({allowedCommands: ["echo"; "date"; "ls"]}))
+$helper.registerTools(cs.agtools.AITToolData.new({allowedDataclasses: ["Product"]; maxRecords: 20}))
+$helper.registerTools(cs.agtools.AITToolImage.new($client; {outputFolder: Folder("/PACKAGE/images")}))
+$helper.registerTools(cs.agtools.AITToolCalculator.new())
 
 // The LLM orchestrates across all tools
 var $result:=$helper.prompt("Search for 4D programming, fetch the top result, and save a summary to /tmp/sandbox/summary.md")
@@ -76,7 +72,7 @@ See `demo_agent` method for a complete multi-tool example.
 Fetches web page content via `4D.HTTPRequest`.
 
 ```4d
-var $tool:=cs.AIToolWebFetch.new({ \
+var $tool:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["*.wikipedia.org"]; \  // Domain whitelist (⚠️ required for security)
   timeout: 15; \
   maxResponseSize: 50000 \
@@ -90,7 +86,7 @@ var $tool:=cs.AIToolWebFetch.new({ \
 Searches the web via DuckDuckGo's HTML endpoint.
 
 ```4d
-var $tool:=cs.AIToolSearch.new({ \
+var $tool:=cs.agtools.AITToolSearch.new({ \
   maxResults: 5; \
   timeout: 10 \
 })
@@ -103,7 +99,7 @@ var $tool:=cs.AIToolSearch.new({ \
 File and folder operations using `4D.File` / `4D.Folder`.
 
 ```4d
-var $tool:=cs.AIToolFileSystem.new({ \
+var $tool:=cs.agtools.AITToolFileSystem.new({ \
   allowedPaths: ["/Users/me/project/"]; \  // Sandbox (⚠️ required)
   deniedPaths: ["*.env"; "*.key"]; \
   readOnly: True \                          // Disable writes when not needed
@@ -118,7 +114,7 @@ var $tool:=cs.AIToolFileSystem.new({ \
 Shell command execution via `4D.SystemWorker`.
 
 ```4d
-var $tool:=cs.AIToolCommand.new({ \
+var $tool:=cs.agtools.AITToolCommand.new({ \
   allowedCommands: ["echo"; "date"; "ls"; "cat"]; \  // Mandatory whitelist
   blockMetacharacters: True; \                         // Block |, ;, &&, etc.
   timeout: 10 \
@@ -133,7 +129,7 @@ var $tool:=cs.AIToolCommand.new({ \
 4D database access via ORDA.
 
 ```4d
-var $tool:=cs.AIToolData.new({ \
+var $tool:=cs.agtools.AITToolData.new({ \
   allowedDataclasses: ["Product"; "Category"]; \  // Table whitelist
   maxRecords: 50; \
   readOnly: True \
@@ -148,7 +144,7 @@ var $tool:=cs.AIToolData.new({ \
 Generate images from text prompts via the OpenAI Images API. Requires an OpenAI client instance.
 
 ```4d
-var $tool:=cs.AIToolImage.new($client; { \
+var $tool:=cs.agtools.AITToolImage.new($client; { \
   defaultModel: "dall-e-3"; \
   allowedSizes: New collection("1024x1024"); \
   outputFolder: Folder("/PACKAGE/images") \
@@ -163,64 +159,13 @@ var $tool:=cs.AIToolImage.new($client; { \
 Safe math expression evaluation via the [ExpressionLanguage](https://github.com/mesopelagique/ExpressionLanguage) component. A sandboxed alternative to giving the LLM a "run code" tool — no access to 4D commands, file I/O, network, or database.
 
 ```4d
-var $tool:=cs.AIToolCalculator.new({ \
+var $tool:=cs.agtools.AITToolCalculator.new({ \
   maxExpressionLength: 500 \
 })
 ```
 
 **Tools:** `evaluate_expression`  
 **Security:** 🟢 Lowest risk tool. Sandboxed expression engine — only registered math functions available (abs, round, sqrt, pow, log, sin/cos/tan, min, max, floor, ceil, pi, e, random). No code execution possible.
-
-## Project Structure
-
-```
-4D-AIKit-Tools/
-├── Project/
-│   ├── 4D AIKit Tools.4DProject
-│   └── Sources/
-│       ├── Classes/
-│       │   ├── AIToolWebFetch.4dm       # Web page fetching
-│       │   ├── AIToolSearch.4dm         # DuckDuckGo search
-│       │   ├── AIToolFileSystem.4dm     # File operations
-│       │   ├── AIToolCommand.4dm        # Shell commands
-│       │   ├── AIToolData.4dm           # ORDA database queries
-│       │   ├── AIToolImage.4dm          # Image generation
-│       │   └── AIToolCalculator.4dm     # Math expressions
-│       ├── Methods/
-│       │   ├── TestOpenAI.4dm           # API key helper
-│       │   ├── test_web_fetch.4dm       # WebFetch test
-│       │   ├── test_search.4dm          # Search test
-│       │   ├── test_filesystem.4dm      # FileSystem test
-│       │   ├── test_command.4dm         # Command test
-│       │   ├── test_data.4dm            # Data test
-│       │   ├── test_image.4dm            # Image test
-│       │   ├── test_calculator.4dm       # Calculator test
-│       │   └── demo_agent.4dm           # Multi-tool demo
-│       └── dependencies.json
-├── Documentation/
-│   ├── tools-security.md                # ⚠️ Security guide
-│   └── Classes/
-│       ├── AIToolWebFetch.md
-│       ├── AIToolSearch.md
-│       ├── AIToolFileSystem.md
-│       ├── AIToolCommand.md
-│       ├── AIToolData.md
-│       ├── AIToolImage.md
-│       └── AIToolCalculator.md
-└── README.md
-```
-
-## Python Reference Implementations
-
-The `datapizza-ai-tools` project contains Python reference implementations of similar tools:
-
-| 4D Tool | Python Equivalent |
-|---------|-------------------|
-| `AIToolWebFetch` | `datapizza.tools.web_fetch.WebFetchTool` |
-| `AIToolSearch` | `datapizza.tools.duckduckgo.DuckDuckGoSearchTool` |
-| `AIToolFileSystem` | `datapizza.tools.filesystem.FileSystem` |
-| `AIToolData` | `datapizza.tools.SQLDatabase.SQLDatabase` |
-| `AIToolCommand` | *(no Python equivalent — custom addition)* |
 
 ## Documentation
 
@@ -234,7 +179,9 @@ The `datapizza-ai-tools` project contains Python reference implementations of si
   - [AIToolImage](Documentation/Classes/AIToolImage.md)
   - [AIToolCalculator](Documentation/Classes/AIToolCalculator.md)
 
-## Roadmap — Future Tools
+## Roadmap
+
+### Future Tools
 
 Ideas for tools that could be added in the future:
 
@@ -249,6 +196,10 @@ Ideas for tools that could be added in the future:
 | **Notification** | Send push notifications, Slack messages, or webhook calls to alert users of agent progress. |
 
 > Contributions and ideas welcome — open an issue or PR.
+
+### Others
+
+**Human-in-the-Loop Authorization**: Require explicit user approval before sensitive operations (for example: deleting a file, writing outside allowed paths, or requesting access to a new directory not in the whitelist).
 
 ## License
 

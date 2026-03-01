@@ -3,7 +3,7 @@
 // Security: dataclass whitelist, record limit, read-only by default, attribute projection
 //
 // Usage:
-//   var $tool:=cs.AIToolData.new({allowedDataclasses: ["Employee"; "Product"]; maxRecords: 50})
+//   var $tool:=cs.agtools.AITToolData.new({allowedDataclasses: ["Employee"; "Product"]; maxRecords: 50})
 //   $helper.registerTools($tool)
 
 property tools : Collection

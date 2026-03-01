@@ -3,7 +3,7 @@
 // Security: domain whitelist, response size cap, text-only content filtering
 // 
 // Usage:
-//   var $tool:=cs.AIToolWebFetch.new({allowedDomains: ["*.example.com"; "api.github.com"]})
+//   var $tool:=cs.agtools.AITToolWebFetch.new({allowedDomains: ["*.example.com"; "api.github.com"]})
 //   $helper.registerTools($tool)
 
 property tools : Collection

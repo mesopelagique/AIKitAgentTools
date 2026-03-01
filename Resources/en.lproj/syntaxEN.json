@@ -1,0 +1,624 @@
+{
+	"_method_": {},
+	"cs.agtools": {
+		"AIToolCalculator": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolMemory": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolImage": {
+			"new()": {
+				"Syntax": "**.new**( *client* : Object; *config* : Object )",
+				"Params": [
+					[
+						"client",
+						"Object",
+						"->"
+					],
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolFileSystem": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolCommand": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolSearch": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolWebFetch": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolData": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolMail": {
+			"new()": {
+				"Syntax": "**.new**( *transporterOrConfig* : Object; *config* : Object )",
+				"Params": [
+					[
+						"transporterOrConfig",
+						"Object",
+						"->"
+					],
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		}
+	},
+	"AIToolCalculator": {
+		"evaluate_expression()": {
+			"Syntax": "**.evaluate_expression**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"maxExpressionLength": {
+			"Syntax": "maxExpressionLength : Integer"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolMemory": {
+		"memory_delete()": {
+			"Syntax": "**.memory_delete**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"memory_retrieve()": {
+			"Syntax": "**.memory_retrieve**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"memory_list()": {
+			"Syntax": "**.memory_list**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"memory_store()": {
+			"Syntax": "**.memory_store**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"maxKeyLength": {
+			"Syntax": "maxKeyLength : Integer"
+		},
+		"maxValueLength": {
+			"Syntax": "maxValueLength : Integer"
+		},
+		"maxEntries": {
+			"Syntax": "maxEntries : Integer"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolImage": {
+		"generate_image()": {
+			"Syntax": "**.generate_image**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"outputFolder": {
+			"Syntax": "outputFolder : Object"
+		},
+		"defaultSize": {
+			"Syntax": "defaultSize : Text"
+		},
+		"allowedSizes": {
+			"Syntax": "allowedSizes : Collection"
+		},
+		"defaultStyle": {
+			"Syntax": "defaultStyle : Text"
+		},
+		"defaultModel": {
+			"Syntax": "defaultModel : Text"
+		},
+		"maxPromptLength": {
+			"Syntax": "maxPromptLength : Integer"
+		},
+		"allowedModels": {
+			"Syntax": "allowedModels : Collection"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolFileSystem": {
+		"copy_file()": {
+			"Syntax": "**.copy_file**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"move_item()": {
+			"Syntax": "**.move_item**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"delete_file()": {
+			"Syntax": "**.delete_file**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"write_file()": {
+			"Syntax": "**.write_file**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"read_file()": {
+			"Syntax": "**.read_file**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"create_directory()": {
+			"Syntax": "**.create_directory**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"list_directory()": {
+			"Syntax": "**.list_directory**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"readOnly": {
+			"Syntax": "readOnly : Boolean"
+		},
+		"deniedPaths": {
+			"Syntax": "deniedPaths : Collection"
+		},
+		"allowedPaths": {
+			"Syntax": "allowedPaths : Collection"
+		},
+		"maxFileSize": {
+			"Syntax": "maxFileSize : Integer"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolCommand": {
+		"run_command()": {
+			"Syntax": "**.run_command**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"blockMetacharacters": {
+			"Syntax": "blockMetacharacters : Boolean"
+		},
+		"maxOutputSize": {
+			"Syntax": "maxOutputSize : Integer"
+		},
+		"timeout": {
+			"Syntax": "timeout : Integer"
+		},
+		"allowedCommands": {
+			"Syntax": "allowedCommands : Collection"
+		},
+		"workingDirectory": {
+			"Syntax": "workingDirectory : Text"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolSearch": {
+		"duckduckgo_search()": {
+			"Syntax": "**.duckduckgo_search**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"timeout": {
+			"Syntax": "timeout : Integer"
+		},
+		"maxResults": {
+			"Syntax": "maxResults : Integer"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolWebFetch": {
+		"web_fetch()": {
+			"Syntax": "**.web_fetch**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"maxResponseSize": {
+			"Syntax": "maxResponseSize : Integer"
+		},
+		"userAgent": {
+			"Syntax": "userAgent : Text"
+		},
+		"timeout": {
+			"Syntax": "timeout : Integer"
+		},
+		"allowedMethods": {
+			"Syntax": "allowedMethods : Collection"
+		},
+		"allowedDomains": {
+			"Syntax": "allowedDomains : Collection"
+		},
+		"allowedContentTypes": {
+			"Syntax": "allowedContentTypes : Collection"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolData": {
+		"get_dataclass_info()": {
+			"Syntax": "**.get_dataclass_info**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"query_data()": {
+			"Syntax": "**.query_data**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"list_dataclasses()": {
+			"Syntax": "**.list_dataclasses**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"readOnly": {
+			"Syntax": "readOnly : Boolean"
+		},
+		"maxRecords": {
+			"Syntax": "maxRecords : Integer"
+		},
+		"allowedDataclasses": {
+			"Syntax": "allowedDataclasses : Collection"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolMail": {
+		"send_email()": {
+			"Syntax": "**.send_email**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"check_email_connection()": {
+			"Syntax": "**.check_email_connection**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"maxBodyLength": {
+			"Syntax": "maxBodyLength : Integer"
+		},
+		"maxRecipients": {
+			"Syntax": "maxRecipients : Integer"
+		},
+		"allowedRecipientDomains": {
+			"Syntax": "allowedRecipientDomains : Collection"
+		},
+		"fromName": {
+			"Syntax": "fromName : Text"
+		},
+		"maxSubjectLength": {
+			"Syntax": "maxSubjectLength : Integer"
+		},
+		"fromAddress": {
+			"Syntax": "fromAddress : Text"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	}
+}

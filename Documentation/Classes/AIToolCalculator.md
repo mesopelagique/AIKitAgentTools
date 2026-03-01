@@ -7,14 +7,14 @@ This is the recommended alternative to giving the LLM a "run code" tool. The exp
 ## Quick start
 
 ```4d
-var $tool:=cs.AIToolCalculator.new()
+var $tool:=cs.agtools.AITToolCalculator.new()
 $helper.registerTools($tool)
 ```
 
 ## Constructor
 
 ```4d
-cs.AIToolCalculator.new({$config : Object})
+cs.agtools.AITToolCalculator.new({$config : Object})
 ```
 
 | Parameter | Type | Description |
@@ -135,7 +135,7 @@ Number transforms: `|abs`, `|round`, `|floor`, `|ceil`.
 ### Basic math
 
 ```4d
-var $tool:=cs.AIToolCalculator.new()
+var $tool:=cs.agtools.AITToolCalculator.new()
 $tool.evaluate_expression({expression: "2 + 3 * 4"})
 // → {"success":true, "result":14, "type":"number", "expression":"2 + 3 * 4"}
 ```

@@ -3,7 +3,7 @@
 // Security: path sandboxing via allowedPaths/deniedPaths, optional readOnly mode
 //
 // Usage:
-//   var $tool:=cs.AIToolFileSystem.new({allowedPaths: ["/Users/me/project/"]; readOnly: True})
+//   var $tool:=cs.agtools.AITToolFileSystem.new({allowedPaths: ["/Users/me/project/"]; readOnly: True})
 //   $helper.registerTools($tool)
 
 property tools : Collection

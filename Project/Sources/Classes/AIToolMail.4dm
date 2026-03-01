@@ -6,14 +6,14 @@
 // Usage (pass a transporter):
 //   var $server:={host: "smtp.example.com"; port: 587; user: "bot@example.com"; password: "xxx"}
 //   var $transporter:=SMTP New transporter($server)
-//   var $mail:=cs.AIToolMail.new($transporter; { \
+//   var $mail:=cs.agtools.AITToolMail.new($transporter; { \
 //     fromAddress: "bot@example.com"; \
 //     allowedRecipientDomains: ["example.com"; "partner.org"] \
 //   })
 //   $helper.registerTools($mail)
 //
 // Usage (pass server config — transporter created internally):
-//   var $mail:=cs.AIToolMail.new({host: "smtp.example.com"; user: "bot@example.com"; password: "xxx"}; { \
+//   var $mail:=cs.agtools.AITToolMail.new({host: "smtp.example.com"; user: "bot@example.com"; password: "xxx"}; { \
 //     fromAddress: "bot@example.com"; \
 //     allowedRecipientDomains: ["example.com"] \
 //   })

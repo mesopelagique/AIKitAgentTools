@@ -88,7 +88,7 @@ This is especially dangerous when the tool has access to authenticated APIs (via
 
 **Recommended secure configuration (read-only):**
 ```4d
-var $tool:=cs.AIToolWebFetch.new({ \
+var $tool:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["*.wikipedia.org"; "docs.example.com"]; \
   maxResponseSize: 50000; \
   timeout: 10 \
@@ -97,7 +97,7 @@ var $tool:=cs.AIToolWebFetch.new({ \
 
 **Recommended secure configuration (REST API):**
 ```4d
-var $tool:=cs.AIToolWebFetch.new({ \
+var $tool:=cs.agtools.AITToolWebFetch.new({ \
   allowedDomains: ["api.example.com"]; \
   allowedMethods: New collection("GET"; "POST"); \
   maxResponseSize: 50000; \
@@ -160,7 +160,7 @@ Writing malicious code to executable locations, modifying startup scripts, creat
 **Recommended secure configuration:**
 ```4d
 // Read-only access to a specific project folder
-var $tool:=cs.AIToolFileSystem.new({ \
+var $tool:=cs.agtools.AITToolFileSystem.new({ \
   allowedPaths: ["/Users/me/project/src/"]; \
   deniedPaths: ["*.env"; "*.key"; "*.pem"; "*.secret"; "*/.git/*"]; \
   readOnly: True; \
@@ -199,7 +199,7 @@ The LLM reads command output and may be instructed (via prompt injection in the 
 **Recommended secure configuration:**
 ```4d
 // Only safe, read-only commands
-var $tool:=cs.AIToolCommand.new({ \
+var $tool:=cs.agtools.AITToolCommand.new({ \
   allowedCommands: ["echo"; "date"; "ls"; "cat"; "wc"; "head"; "tail"]; \
   blockMetacharacters: True; \
   timeout: 10; \
@@ -275,7 +275,7 @@ Even if the LLM doesn't directly display sensitive data, it processes it in cont
 **Recommended secure configuration:**
 ```4d
 // Only expose non-sensitive tables with limited records
-var $tool:=cs.AIToolData.new({ \
+var $tool:=cs.agtools.AITToolData.new({ \
   allowedDataclasses: ["Product"; "Category"; "Department"]; \
   maxRecords: 20; \
   readOnly: True \
@@ -314,7 +314,7 @@ Returned image URLs are temporary Azure Blob Storage links. Anyone with the link
 
 **Recommended secure configuration:**
 ```4d
-var $tool:=cs.AIToolImage.new($client; { \
+var $tool:=cs.agtools.AITToolImage.new($client; { \
   allowedModels: New collection("dall-e-3"); \
   allowedSizes: New collection("1024x1024"); \
   maxPromptLength: 1000; \
@@ -409,7 +409,7 @@ If multiple users share the same memory instance (e.g. a shared persistent datac
 
 **Recommended secure configuration (in-memory):**
 ```4d
-var $memory:=cs.AIToolMemory.new({ \
+var $memory:=cs.agtools.AITToolMemory.new({ \
   maxEntries: 100; \
   maxValueLength: 5000 \
 })
@@ -417,7 +417,7 @@ var $memory:=cs.AIToolMemory.new({ \
 
 **Recommended secure configuration (persistent, per-user):**
 ```4d
-var $memory:=cs.AIToolMemory.new({ \
+var $memory:=cs.agtools.AITToolMemory.new({ \
   dataclass: "AgentMemory"; \
   maxEntries: 500; \
   maxValueLength: 10000 \
@@ -469,7 +469,7 @@ Combined with other tools, this becomes especially dangerous:
 
 **Recommended secure configuration:**
 ```4d
-var $mail:=cs.AIToolMail.new($transporter; { \
+var $mail:=cs.agtools.AITToolMail.new($transporter; { \
   fromAddress: "bot@company.com"; \
   fromName: "AI Assistant"; \
   allowedRecipientDomains: ["company.com"; "partner.org"]; \

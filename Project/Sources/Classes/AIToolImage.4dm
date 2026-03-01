@@ -7,7 +7,7 @@
 //
 // Usage:
 //   var $client:=cs.AIKit.OpenAI.new()
-//   var $tool:=cs.AIToolImage.new($client; {outputFolder: Folder("/PACKAGE/images")})
+//   var $tool:=cs.agtools.AITToolImage.new($client; {outputFolder: Folder("/PACKAGE/images")})
 //   $helper.registerTools($tool)
 
 property tools : Collection

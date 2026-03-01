@@ -8,14 +8,14 @@ Unlike the other `AITool*` classes that are self-contained, `AIToolImage` requir
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new()
-var $tool:=cs.AIToolImage.new($client)
+var $tool:=cs.agtools.AITToolImage.new($client)
 $helper.registerTools($tool)
 ```
 
 ## Constructor
 
 ```4d
-cs.AIToolImage.new($client : Object {; $config : Object})
+cs.agtools.AITToolImage.new($client : Object {; $config : Object})
 ```
 
 | Parameter | Type | Description |
@@ -67,7 +67,7 @@ cs.AIToolImage.new($client : Object {; $config : Object})
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new()
-var $tool:=cs.AIToolImage.new($client; {\
+var $tool:=cs.agtools.AITToolImage.new($client; {\
   defaultModel: "dall-e-3"; \
   outputFolder: Folder("/PACKAGE/images")\
 })
@@ -80,7 +80,7 @@ var $result:=$tool.generate_image({prompt: "A futuristic city at sunset"})
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new()
-var $tool:=cs.AIToolImage.new($client; {\
+var $tool:=cs.agtools.AITToolImage.new($client; {\
   allowedModels: New collection("dall-e-3"); \
   outputFolder: Folder(Temporary folder; fk platform path).folder("ai_images")\
 })

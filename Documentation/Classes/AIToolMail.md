@@ -25,7 +25,7 @@ The constructor accepts either a `4D.SMTPTransporter` instance or a server confi
 // Option A: Pass a pre-built transporter
 var $server:={host: "smtp.gmail.com"; port: 465; user: "bot@company.com"; password: "app-password"}
 var $transporter:=SMTP New transporter($server)
-var $mail:=cs.AIToolMail.new($transporter; { \
+var $mail:=cs.agtools.AITToolMail.new($transporter; { \
   fromAddress: "bot@company.com"; \
   fromName: "Assistant Bot"; \
   allowedRecipientDomains: ["company.com"; "partner.org"]; \
@@ -35,7 +35,7 @@ var $mail:=cs.AIToolMail.new($transporter; { \
 
 ```4d
 // Option B: Pass server config directly (transporter created internally)
-var $mail:=cs.AIToolMail.new( \
+var $mail:=cs.agtools.AITToolMail.new( \
   {host: "smtp.company.com"; port: 587; user: "bot@company.com"; password: "xxx"}; \
   { \
     fromAddress: "bot@company.com"; \
@@ -90,7 +90,7 @@ var $transporter:=SMTP New transporter({ \
   password: $smtpPassword \
 })
 
-var $mail:=cs.AIToolMail.new($transporter; { \
+var $mail:=cs.agtools.AITToolMail.new($transporter; { \
   fromAddress: "assistant@company.com"; \
   fromName: "AI Assistant"; \
   allowedRecipientDomains: ["company.com"]; \
@@ -111,12 +111,12 @@ $helper.prompt("Send a meeting reminder to alice@company.com about tomorrow's st
 
 ```4d
 // Agent that can search the web and email a summary
-var $mail:=cs.AIToolMail.new($transporter; { \
+var $mail:=cs.agtools.AITToolMail.new($transporter; { \
   fromAddress: "bot@company.com"; \
   allowedRecipientDomains: ["company.com"] \
 })
-var $search:=cs.AIToolSearch.new({maxResults: 5})
-var $webFetch:=cs.AIToolWebFetch.new({allowedDomains: ["*.wikipedia.org"]})
+var $search:=cs.agtools.AITToolSearch.new({maxResults: 5})
+var $webFetch:=cs.agtools.AITToolWebFetch.new({allowedDomains: ["*.wikipedia.org"]})
 
 $helper.registerTools($mail)
 $helper.registerTools($search)

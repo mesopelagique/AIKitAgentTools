@@ -4,8 +4,8 @@
 // -----------------------------------------------------------------
 // 1. Basic instantiation
 // -----------------------------------------------------------------
-var $tool:=cs.AIToolCalculator.new()
-ASSERT(OB Instance of($tool; cs.AIToolCalculator); "Must be AIToolCalculator instance")
+var $tool:=cs.agtools.AITToolCalculator.new()
+ASSERT(OB Instance of($tool; cs.agtools.AITToolCalculator); "Must be AIToolCalculator instance")
 ASSERT($tool.tools.length=1; "Must expose 1 tool (evaluate_expression)")
 ASSERT($tool.tools[0].name="evaluate_expression"; "Tool name must be evaluate_expression")
 ASSERT($tool.maxExpressionLength=1000; "Default maxExpressionLength must be 1000")
@@ -13,7 +13,7 @@ ASSERT($tool.maxExpressionLength=1000; "Default maxExpressionLength must be 1000
 // -----------------------------------------------------------------
 // 2. Custom config
 // -----------------------------------------------------------------
-var $tool2:=cs.AIToolCalculator.new({maxExpressionLength: 200})
+var $tool2:=cs.agtools.AITToolCalculator.new({maxExpressionLength: 200})
 ASSERT($tool2.maxExpressionLength=200; "Custom maxExpressionLength must be 200")
 
 // -----------------------------------------------------------------
