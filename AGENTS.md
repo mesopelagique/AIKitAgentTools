@@ -8,11 +8,12 @@ When adding a new tool (or making significant changes to an existing one):
 
 1. Create or update the tool class in `Project/Sources/Classes/` using the `AIToolXXX` naming pattern (example: `AIToolCalendar`).
 2. Add or update a matching test method in `Project/Sources/Methods/` using the `test_xxx` naming pattern (example: `test_calendar`).
-3. Document the tool class in `Documentation/Classes/` (one markdown file per tool class).
-4. Describe possible security issues for the tool.
-5. Describe possible overuse/cost risks for the tool.
-6. Update `Documentation/tools-security.md` accordingly.
-7. Compile and test before considering the change complete.
+3. Register the `test_xxx` method in `Project/Sources/folders.json` under `"tests" > "methods"`.
+4. Document the tool class in `Documentation/Classes/` (one markdown file per tool class).
+5. Describe possible security issues for the tool.
+6. Describe possible overuse/cost risks for the tool.
+7. Update `Documentation/tools-security.md` accordingly.
+8. Compile and test before considering the change complete.
 
 ## Compile and Test Workflow
 

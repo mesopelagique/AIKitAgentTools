@@ -3,7 +3,7 @@
 // Security: query sanitization, result count cap, untrusted content warning
 //
 // Usage:
-//   var $tool:=cs.agtools.AITToolSearch.new({maxResults: 5})
+//   var $tool:=cs.AIToolSearch.new({maxResults: 5})
 //   $helper.registerTools($tool)
 
 property tools : Collection

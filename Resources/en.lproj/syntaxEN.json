@@ -14,38 +14,7 @@
 				"Summary": ""
 			}
 		},
-		"AIToolMemory": {
-			"new()": {
-				"Syntax": "**.new**( *config* : Object )",
-				"Params": [
-					[
-						"config",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"AIToolImage": {
-			"new()": {
-				"Syntax": "**.new**( *client* : Object; *config* : Object )",
-				"Params": [
-					[
-						"client",
-						"Object",
-						"->"
-					],
-					[
-						"config",
-						"Object",
-						"->"
-					]
-				],
-				"Summary": ""
-			}
-		},
-		"AIToolFileSystem": {
+		"AIToolData": {
 			"new()": {
 				"Syntax": "**.new**( *config* : Object )",
 				"Params": [
@@ -59,6 +28,19 @@
 			}
 		},
 		"AIToolCommand": {
+			"new()": {
+				"Syntax": "**.new**( *config* : Object )",
+				"Params": [
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolFileSystem": {
 			"new()": {
 				"Syntax": "**.new**( *config* : Object )",
 				"Params": [
@@ -97,7 +79,25 @@
 				"Summary": ""
 			}
 		},
-		"AIToolData": {
+		"AIToolMail": {
+			"new()": {
+				"Syntax": "**.new**( *transporterOrConfig* : Object; *config* : Object )",
+				"Params": [
+					[
+						"transporterOrConfig",
+						"Object",
+						"->"
+					],
+					[
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolNotification": {
 			"new()": {
 				"Syntax": "**.new**( *config* : Object )",
 				"Params": [
@@ -110,12 +110,25 @@
 				"Summary": ""
 			}
 		},
-		"AIToolMail": {
+		"AIToolMemory": {
 			"new()": {
-				"Syntax": "**.new**( *transporterOrConfig* : Object; *config* : Object )",
+				"Syntax": "**.new**( *config* : Object )",
 				"Params": [
 					[
-						"transporterOrConfig",
+						"config",
+						"Object",
+						"->"
+					]
+				],
+				"Summary": ""
+			}
+		},
+		"AIToolImage": {
+			"new()": {
+				"Syntax": "**.new**( *client* : Object; *config* : Object )",
+				"Params": [
+					[
+						"client",
 						"Object",
 						"->"
 					],
@@ -153,9 +166,9 @@
 			"Syntax": "tools : Collection"
 		}
 	},
-	"AIToolMemory": {
-		"memory_delete()": {
-			"Syntax": "**.memory_delete**( *params* : Object ) : Text",
+	"AIToolData": {
+		"get_dataclass_info()": {
+			"Syntax": "**.get_dataclass_info**( *params* : Object ) : Text",
 			"Params": [
 				[
 					"params",
@@ -170,8 +183,8 @@
 			],
 			"Summary": ""
 		},
-		"memory_retrieve()": {
-			"Syntax": "**.memory_retrieve**( *params* : Object ) : Text",
+		"query_data()": {
+			"Syntax": "**.query_data**( *params* : Object ) : Text",
 			"Params": [
 				[
 					"params",
@@ -186,8 +199,8 @@
 			],
 			"Summary": ""
 		},
-		"memory_list()": {
-			"Syntax": "**.memory_list**( *params* : Object ) : Text",
+		"list_dataclasses()": {
+			"Syntax": "**.list_dataclasses**( *params* : Object ) : Text",
 			"Params": [
 				[
 					"params",
@@ -202,38 +215,22 @@
 			],
 			"Summary": ""
 		},
-		"memory_store()": {
-			"Syntax": "**.memory_store**( *params* : Object ) : Text",
-			"Params": [
-				[
-					"params",
-					"Object",
-					"->"
-				],
-				[
-					"",
-					"Text",
-					"<-"
-				]
-			],
-			"Summary": ""
+		"readOnly": {
+			"Syntax": "readOnly : Boolean"
 		},
-		"maxKeyLength": {
-			"Syntax": "maxKeyLength : Integer"
+		"maxRecords": {
+			"Syntax": "maxRecords : Integer"
 		},
-		"maxValueLength": {
-			"Syntax": "maxValueLength : Integer"
-		},
-		"maxEntries": {
-			"Syntax": "maxEntries : Integer"
+		"allowedDataclasses": {
+			"Syntax": "allowedDataclasses : Collection"
 		},
 		"tools": {
 			"Syntax": "tools : Collection"
 		}
 	},
-	"AIToolImage": {
-		"generate_image()": {
-			"Syntax": "**.generate_image**( *params* : Object ) : Text",
+	"AIToolCommand": {
+		"run_command()": {
+			"Syntax": "**.run_command**( *params* : Object ) : Text",
 			"Params": [
 				[
 					"params",
@@ -248,26 +245,20 @@
 			],
 			"Summary": ""
 		},
-		"outputFolder": {
-			"Syntax": "outputFolder : Object"
+		"blockMetacharacters": {
+			"Syntax": "blockMetacharacters : Boolean"
 		},
-		"defaultSize": {
-			"Syntax": "defaultSize : Text"
+		"maxOutputSize": {
+			"Syntax": "maxOutputSize : Integer"
 		},
-		"allowedSizes": {
-			"Syntax": "allowedSizes : Collection"
+		"timeout": {
+			"Syntax": "timeout : Integer"
 		},
-		"defaultStyle": {
-			"Syntax": "defaultStyle : Text"
+		"allowedCommands": {
+			"Syntax": "allowedCommands : Collection"
 		},
-		"defaultModel": {
-			"Syntax": "defaultModel : Text"
-		},
-		"maxPromptLength": {
-			"Syntax": "maxPromptLength : Integer"
-		},
-		"allowedModels": {
-			"Syntax": "allowedModels : Collection"
+		"workingDirectory": {
+			"Syntax": "workingDirectory : Text"
 		},
 		"tools": {
 			"Syntax": "tools : Collection"
@@ -402,42 +393,6 @@
 			"Syntax": "tools : Collection"
 		}
 	},
-	"AIToolCommand": {
-		"run_command()": {
-			"Syntax": "**.run_command**( *params* : Object ) : Text",
-			"Params": [
-				[
-					"params",
-					"Object",
-					"->"
-				],
-				[
-					"",
-					"Text",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"blockMetacharacters": {
-			"Syntax": "blockMetacharacters : Boolean"
-		},
-		"maxOutputSize": {
-			"Syntax": "maxOutputSize : Integer"
-		},
-		"timeout": {
-			"Syntax": "timeout : Integer"
-		},
-		"allowedCommands": {
-			"Syntax": "allowedCommands : Collection"
-		},
-		"workingDirectory": {
-			"Syntax": "workingDirectory : Text"
-		},
-		"tools": {
-			"Syntax": "tools : Collection"
-		}
-	},
 	"AIToolSearch": {
 		"duckduckgo_search()": {
 			"Syntax": "**.duckduckgo_search**( *params* : Object ) : Text",
@@ -504,68 +459,6 @@
 			"Syntax": "tools : Collection"
 		}
 	},
-	"AIToolData": {
-		"get_dataclass_info()": {
-			"Syntax": "**.get_dataclass_info**( *params* : Object ) : Text",
-			"Params": [
-				[
-					"params",
-					"Object",
-					"->"
-				],
-				[
-					"",
-					"Text",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"query_data()": {
-			"Syntax": "**.query_data**( *params* : Object ) : Text",
-			"Params": [
-				[
-					"params",
-					"Object",
-					"->"
-				],
-				[
-					"",
-					"Text",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"list_dataclasses()": {
-			"Syntax": "**.list_dataclasses**( *params* : Object ) : Text",
-			"Params": [
-				[
-					"params",
-					"Object",
-					"->"
-				],
-				[
-					"",
-					"Text",
-					"<-"
-				]
-			],
-			"Summary": ""
-		},
-		"readOnly": {
-			"Syntax": "readOnly : Boolean"
-		},
-		"maxRecords": {
-			"Syntax": "maxRecords : Integer"
-		},
-		"allowedDataclasses": {
-			"Syntax": "allowedDataclasses : Collection"
-		},
-		"tools": {
-			"Syntax": "tools : Collection"
-		}
-	},
 	"AIToolMail": {
 		"send_email()": {
 			"Syntax": "**.send_email**( *params* : Object ) : Text",
@@ -616,6 +509,171 @@
 		},
 		"fromAddress": {
 			"Syntax": "fromAddress : Text"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolNotification": {
+		"send_notification()": {
+			"Syntax": "**.send_notification**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"dryRun": {
+			"Syntax": "dryRun : Boolean"
+		},
+		"webhookTimeout": {
+			"Syntax": "webhookTimeout : Integer"
+		},
+		"webhookURL": {
+			"Syntax": "webhookURL : Text"
+		},
+		"maxTextLength": {
+			"Syntax": "maxTextLength : Integer"
+		},
+		"maxTitleLength": {
+			"Syntax": "maxTitleLength : Integer"
+		},
+		"webhookHeaders": {
+			"Syntax": "webhookHeaders : Object"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		},
+		"defaultChannel": {
+			"Syntax": "defaultChannel : Text"
+		},
+		"allowedChannels": {
+			"Syntax": "allowedChannels : Collection"
+		}
+	},
+	"AIToolMemory": {
+		"memory_delete()": {
+			"Syntax": "**.memory_delete**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"memory_retrieve()": {
+			"Syntax": "**.memory_retrieve**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"memory_list()": {
+			"Syntax": "**.memory_list**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"memory_store()": {
+			"Syntax": "**.memory_store**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"maxKeyLength": {
+			"Syntax": "maxKeyLength : Integer"
+		},
+		"maxValueLength": {
+			"Syntax": "maxValueLength : Integer"
+		},
+		"maxEntries": {
+			"Syntax": "maxEntries : Integer"
+		},
+		"tools": {
+			"Syntax": "tools : Collection"
+		}
+	},
+	"AIToolImage": {
+		"generate_image()": {
+			"Syntax": "**.generate_image**( *params* : Object ) : Text",
+			"Params": [
+				[
+					"params",
+					"Object",
+					"->"
+				],
+				[
+					"",
+					"Text",
+					"<-"
+				]
+			],
+			"Summary": ""
+		},
+		"outputFolder": {
+			"Syntax": "outputFolder : Object"
+		},
+		"defaultSize": {
+			"Syntax": "defaultSize : Text"
+		},
+		"allowedSizes": {
+			"Syntax": "allowedSizes : Collection"
+		},
+		"defaultStyle": {
+			"Syntax": "defaultStyle : Text"
+		},
+		"defaultModel": {
+			"Syntax": "defaultModel : Text"
+		},
+		"maxPromptLength": {
+			"Syntax": "maxPromptLength : Integer"
+		},
+		"allowedModels": {
+			"Syntax": "allowedModels : Collection"
 		},
 		"tools": {
 			"Syntax": "tools : Collection"

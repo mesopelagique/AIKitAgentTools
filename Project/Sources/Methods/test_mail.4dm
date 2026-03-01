@@ -9,14 +9,14 @@
 // =================================================================
 // Use a dummy server config — we won't actually connect in these tests
 var $serverConfig : Object:={host: "smtp.example.com"; port: 587; user: "bot@example.com"; password: "test123"}
-var $tool:=cs.agtools.AITToolMail.new($serverConfig; {\
+var $tool:=cs.AIToolMail.new($serverConfig; {\
 	fromAddress: "bot@example.com"; \
 	fromName: "Test Bot"; \
 	allowedRecipientDomains: New collection:C1472("example.com"; "partner.org"); \
 	maxRecipients: 3\
 	})
 
-ASSERT:C1129(OB Instance of:C1731($tool; cs.agtools.AITToolMail); "Must be AIToolMail instance")
+ASSERT:C1129(OB Instance of:C1731($tool; cs.AIToolMail); "Must be AIToolMail instance")
 ASSERT:C1129($tool.tools.length=2; "Must expose 2 tools (send_email, check_email_connection)")
 ASSERT:C1129($tool.tools[0].name="send_email"; "Tool 0 = send_email")
 ASSERT:C1129($tool.tools[1].name="check_email_connection"; "Tool 1 = check_email_connection")
@@ -34,7 +34,7 @@ ASSERT:C1129($tool.allowedRecipientDomains.length=2; "Must have 2 allowed domain
 // =================================================================
 // 3. Default configuration
 // =================================================================
-var $tool2:=cs.agtools.AITToolMail.new($serverConfig)
+var $tool2:=cs.AIToolMail.new($serverConfig)
 ASSERT:C1129($tool2.maxRecipients=5; "Default maxRecipients = 5")
 ASSERT:C1129($tool2.maxSubjectLength=500; "Default maxSubjectLength = 500")
 ASSERT:C1129($tool2.maxBodyLength=50000; "Default maxBodyLength = 50000")

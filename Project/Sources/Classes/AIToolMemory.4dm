@@ -8,11 +8,11 @@
 //   - Database: entries persisted to an ORDA dataclass when configured
 //
 // Usage (in-memory):
-//   var $memory:=cs.agtools.AITToolMemory.new()
+//   var $memory:=cs.AIToolMemory.new()
 //   $helper.registerTools($memory)
 //
 // Usage (database-persisted):
-//   var $memory:=cs.agtools.AITToolMemory.new({ \
+//   var $memory:=cs.AIToolMemory.new({ \
 //     dataclass: "Memory"; \
 //     fields: {key: "memoryKey"; value: "memoryValue"; category: "memoryCategory"} \
 //   })

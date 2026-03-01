@@ -28,7 +28,7 @@ The `AIToolData` class provides 4D database access via ORDA (Object Relational D
 
 ```4d
 // Restricted to specific dataclasses
-var $tool:=cs.agtools.AITToolData.new({ \
+var $tool:=cs.agtools.AIToolData.new({ \
   allowedDataclasses: ["Product"; "Category"]; \
   maxRecords: 50 \
 })
@@ -73,7 +73,7 @@ var $tool:=cs.agtools.AITToolData.new({ \
 #### Example
 
 ```4d
-var $tool:=cs.agtools.AITToolData.new({ \
+var $tool:=cs.agtools.AIToolData.new({ \
   allowedDataclasses: ["Employee"; "Department"]; \
   maxRecords: 20 \
 })

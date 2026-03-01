@@ -1,10 +1,10 @@
 //%attributes = {}
-// demo_agent — Multi-tool agent combining all 7 AI tools
+// demo_agent — Multi-tool agent combining all available AI tools
 //
 // Demonstrates how to register multiple tool providers on a single
 // OpenAIChatHelper instance, enabling the LLM to orchestrate across
 // web search, page fetching, file system, shell commands, database queries,
-// image generation, and math computation.
+// image generation, math computation, memory, and notifications.
 
 var $client:=TestOpenAI()
 If ($client=Null)
@@ -16,33 +16,33 @@ End if
 // -----------------------------------------------------------------
 
 // Web fetch — restricted to specific domains
-var $webFetch:=cs.agtools.AITToolWebFetch.new({\
+var $webFetch:=cs.AIToolWebFetch.new({\
 allowedDomains: ["*.wikipedia.org"; "httpbin.org"; "*.github.com"]; \
 timeout: 15; \
 maxResponseSize: 20000\
 })
 
 // Search — limit result count
-var $search:=cs.agtools.AITToolSearch.new({maxResults: 3})
+var $search:=cs.AIToolSearch.new({maxResults: 3})
 
 // File system — sandboxed to a temp directory
 var $sandbox:=Folder(Temporary folder; fk platform path).folder("ai_agent_demo")
 $sandbox.create()
 
-var $fileSystem:=cs.agtools.AITToolFileSystem.new({\
+var $fileSystem:=cs.AIToolFileSystem.new({\
 allowedPaths: [$sandbox.path]; \
 readOnly: False; \
 deniedPaths: ["*.env"; "*.key"; "*.secret"]\
 })
 
 // Command — only safe read-only commands
-var $command:=cs.agtools.AITToolCommand.new({\
+var $command:=cs.AIToolCommand.new({\
 allowedCommands: ["echo"; "date"; "ls"; "cat"; "wc"; "head"; "tail"]; \
 timeout: 10\
 })
 
 // Data — read-only access (adjust allowedDataclasses for your database)
-var $data:=cs.agtools.AITToolData.new({\
+var $data:=cs.AIToolData.new({\
 maxRecords: 20; \
 readOnly: True\
 })
@@ -51,7 +51,7 @@ readOnly: True\
 var $imageFolder:=Folder(Temporary folder; fk platform path).folder("ai_agent_images")
 $imageFolder.create()
 
-var $image:=cs.agtools.AITToolImage.new($client; {\
+var $image:=cs.AIToolImage.new($client; {\
 defaultModel: "dall-e-3"; \
 allowedSizes: New collection("512x512"; "1024x1024"); \
 maxPromptLength: 2000; \
@@ -59,14 +59,17 @@ outputFolder: $imageFolder\
 })
 
 // Calculator — safe math expressions (sandboxed, no code execution)
-var $calculator:=cs.agtools.AITToolCalculator.new()
+var $calculator:=cs.AIToolCalculator.new()
 
 // Memory — in-memory key-value store for agent context
-var $memory:=cs.agtools.AITToolMemory.new({maxEntries: 100; maxValueLength: 5000})
+var $memory:=cs.AIToolMemory.new({maxEntries: 100; maxValueLength: 5000})
+
+// Notification — local OS notifications (optional webhook support)
+var $notification:=cs.AIToolNotification.new()
 
 // Mail — SMTP email (disabled by default — uncomment and configure to enable)
 // var $smtpServer:={host: "smtp.example.com"; port: 587; user: "bot@example.com"; password: "your-password"}
-// var $mail:=cs.agtools.AITToolMail.new($smtpServer; {\
+// var $mail:=cs.AIToolMail.new($smtpServer; {\
 //   fromAddress: "bot@example.com"; \
 //   fromName: "AI Assistant"; \
 //   allowedRecipientDomains: New collection("example.com"); \
@@ -86,6 +89,7 @@ $system:=$system+"- **list_dataclasses/get_dataclass_info/query_data**: Query th
 $system:=$system+"- **generate_image**: Generate images from text descriptions\n\n"
 $system:=$system+"- **evaluate_expression**: Evaluate math expressions safely (sqrt, pow, min, max, round, sin, cos, pi, etc.)\n\n"
 $system:=$system+"- **memory_store/memory_retrieve/memory_list/memory_delete**: Remember and recall facts, preferences, and context\n\n"
+$system:=$system+"- **send_notification**: Send local OS notifications or webhook notifications\n\n"
 $system:=$system+"- **send_email/check_email_connection**: Send emails via SMTP (if configured)\n\n"
 $system:=$system+"Combine tools as needed. For example, search for info, fetch a page, and save a summary to a file."
 
@@ -101,6 +105,7 @@ $helper.registerTools($data)
 $helper.registerTools($image)
 $helper.registerTools($calculator)
 $helper.registerTools($memory)
+$helper.registerTools($notification)
 // $helper.registerTools($mail)  // Uncomment when SMTP is configured
 
 // -----------------------------------------------------------------

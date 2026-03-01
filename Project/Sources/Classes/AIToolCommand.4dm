@@ -5,7 +5,7 @@
 // Security: mandatory command whitelist, shell metacharacter blocking, timeout, output cap
 //
 // Usage:
-//   var $tool:=cs.agtools.AITToolCommand.new({allowedCommands: ["ls"; "cat"; "grep"; "echo"; "date"]})
+//   var $tool:=cs.AIToolCommand.new({allowedCommands: ["ls"; "cat"; "grep"; "echo"; "date"]})
 //   $helper.registerTools($tool)
 
 property tools : Collection

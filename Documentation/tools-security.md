@@ -35,6 +35,7 @@ Any text the LLM reads from external sources (web pages, search results, files, 
 | **Calculator** | 🟢 Low | Expression length abuse, resource exhaustion (unlikely) | Sandboxed expression engine, expression length cap, no 4D commands |
 | **Memory** | 🟡 Medium | Data poisoning, prompt injection persistence, PII storage, storage exhaustion | Entry limit, key/value length caps, category isolation |
 | **Mail** | 🔴 Critical | Spam/phishing, data exfiltration via email, impersonation, abuse | Recipient domain whitelist, locked from address, recipient cap, body length limit |
+| **Notification** | 🟡 Medium | Alert spam/flooding, social engineering, webhook abuse/exfiltration | Channel allowlist, title/text caps, fixed webhook endpoint, rate limiting/human approval |
 
 ---
 
@@ -88,7 +89,7 @@ This is especially dangerous when the tool has access to authenticated APIs (via
 
 **Recommended secure configuration (read-only):**
 ```4d
-var $tool:=cs.agtools.AITToolWebFetch.new({ \
+var $tool:=cs.agtools.AIToolWebFetch.new({ \
   allowedDomains: ["*.wikipedia.org"; "docs.example.com"]; \
   maxResponseSize: 50000; \
   timeout: 10 \
@@ -97,7 +98,7 @@ var $tool:=cs.agtools.AITToolWebFetch.new({ \
 
 **Recommended secure configuration (REST API):**
 ```4d
-var $tool:=cs.agtools.AITToolWebFetch.new({ \
+var $tool:=cs.agtools.AIToolWebFetch.new({ \
   allowedDomains: ["api.example.com"]; \
   allowedMethods: New collection("GET"; "POST"); \
   maxResponseSize: 50000; \
@@ -160,7 +161,7 @@ Writing malicious code to executable locations, modifying startup scripts, creat
 **Recommended secure configuration:**
 ```4d
 // Read-only access to a specific project folder
-var $tool:=cs.agtools.AITToolFileSystem.new({ \
+var $tool:=cs.agtools.AIToolFileSystem.new({ \
   allowedPaths: ["/Users/me/project/src/"]; \
   deniedPaths: ["*.env"; "*.key"; "*.pem"; "*.secret"; "*/.git/*"]; \
   readOnly: True; \
@@ -199,7 +200,7 @@ The LLM reads command output and may be instructed (via prompt injection in the 
 **Recommended secure configuration:**
 ```4d
 // Only safe, read-only commands
-var $tool:=cs.agtools.AITToolCommand.new({ \
+var $tool:=cs.agtools.AIToolCommand.new({ \
   allowedCommands: ["echo"; "date"; "ls"; "cat"; "wc"; "head"; "tail"]; \
   blockMetacharacters: True; \
   timeout: 10; \
@@ -275,7 +276,7 @@ Even if the LLM doesn't directly display sensitive data, it processes it in cont
 **Recommended secure configuration:**
 ```4d
 // Only expose non-sensitive tables with limited records
-var $tool:=cs.agtools.AITToolData.new({ \
+var $tool:=cs.agtools.AIToolData.new({ \
   allowedDataclasses: ["Product"; "Category"; "Department"]; \
   maxRecords: 20; \
   readOnly: True \
@@ -314,7 +315,7 @@ Returned image URLs are temporary Azure Blob Storage links. Anyone with the link
 
 **Recommended secure configuration:**
 ```4d
-var $tool:=cs.agtools.AITToolImage.new($client; { \
+var $tool:=cs.agtools.AIToolImage.new($client; { \
   allowedModels: New collection("dall-e-3"); \
   allowedSizes: New collection("1024x1024"); \
   maxPromptLength: 1000; \
@@ -409,7 +410,7 @@ If multiple users share the same memory instance (e.g. a shared persistent datac
 
 **Recommended secure configuration (in-memory):**
 ```4d
-var $memory:=cs.agtools.AITToolMemory.new({ \
+var $memory:=cs.agtools.AIToolMemory.new({ \
   maxEntries: 100; \
   maxValueLength: 5000 \
 })
@@ -417,7 +418,7 @@ var $memory:=cs.agtools.AITToolMemory.new({ \
 
 **Recommended secure configuration (persistent, per-user):**
 ```4d
-var $memory:=cs.agtools.AITToolMemory.new({ \
+var $memory:=cs.agtools.AIToolMemory.new({ \
   dataclass: "AgentMemory"; \
   maxEntries: 500; \
   maxValueLength: 10000 \
@@ -469,11 +470,66 @@ Combined with other tools, this becomes especially dangerous:
 
 **Recommended secure configuration:**
 ```4d
-var $mail:=cs.agtools.AITToolMail.new($transporter; { \
+var $mail:=cs.agtools.AIToolMail.new($transporter; { \
   fromAddress: "bot@company.com"; \
   fromName: "AI Assistant"; \
   allowedRecipientDomains: ["company.com"; "partner.org"]; \
   maxRecipients: 3 \
+})
+```
+
+---
+
+### AIToolNotification
+
+#### Threats
+
+**Notification Spam / Alert Flooding**
+If unrestricted, the LLM can generate many notifications and degrade user experience. In the worst case this can hide legitimate alerts or train users to ignore notifications entirely.
+
+**Social Engineering**
+Notification text can be crafted to pressure users into unsafe actions ("Security issue: run this command now"), especially if messages appear as trusted system alerts.
+
+**Webhook Abuse / Data Exfiltration**
+When webhook mode is enabled, notifications become outbound HTTP requests. If endpoint control is weak, prompt injection can push sensitive text to attacker-controlled services.
+
+**Cross-Tool Prompt Injection Chains**
+An injection from web/file/data content can trigger fake high-priority notifications to manipulate user decisions.
+
+#### Mitigations
+
+| Protection | Configuration | Description |
+|------------|---------------|-------------|
+| Channel allowlist | `allowedChannels: ["os"]` | Keep only OS notifications unless webhook is explicitly needed. |
+| Title/message caps | `maxTitleLength`, `maxTextLength` | Prevent oversized payloads and reduce abuse surface. |
+| Fixed webhook endpoint | `webhookURL` in config | Do not accept webhook URL from model input at runtime. |
+| Header control | `webhookHeaders` | Set authentication headers server-side, not from model text. |
+| Dry-run mode for tests | `dryRun: True` | Validate flows without sending real notifications. |
+| Operational controls | *Architecture/ops* | Add app-side rate limiting and optional user approval for sensitive alerts. |
+
+> **Notification Tool Guidance:**
+> - Prefer `allowedChannels: ["os"]` by default.
+> - If webhook is enabled, use a dedicated endpoint with authentication and rate limits.
+> - Keep notification messages short and informational.
+> - Require human confirmation for notifications that request user action.
+
+**Recommended secure configuration (OS only):**
+```4d
+var $notify:=cs.agtools.AIToolNotification.new({ \
+  allowedChannels: New collection("os"); \
+  maxTitleLength: 100; \
+  maxTextLength: 500 \
+})
+```
+
+**Recommended secure configuration (OS + webhook):**
+```4d
+var $notify:=cs.agtools.AIToolNotification.new({ \
+  allowedChannels: ["os"; "webhook"]; \
+  webhookURL: "https://hooks.example.com/agent-notify"; \
+  webhookHeaders: {Authorization: "Bearer "+$token}; \
+  maxTitleLength: 100; \
+  maxTextLength: 500 \
 })
 ```
 
@@ -514,6 +570,9 @@ Before deploying tools in production:
 - [ ] `AIToolMail` has a locked `fromAddress` pointing to a dedicated bot account
 - [ ] `AIToolMail` `maxRecipients` is set to the minimum needed (3-5)
 - [ ] Consider human-in-the-loop confirmation for email sending
+- [ ] `AIToolNotification` keeps `allowedChannels` minimal (`["os"]` unless webhook is required)
+- [ ] `AIToolNotification` webhook endpoint is fixed in configuration (not model-controlled)
+- [ ] Notification rate limits and approval gates are in place for high-impact alerts
 - [ ] Human-in-the-loop review is enabled for destructive operations (delete, write, execute)
 - [ ] Logging is enabled to audit tool usage
 
@@ -528,3 +587,4 @@ Before deploying tools in production:
 - [AIToolCalculator](Classes/AIToolCalculator.md)
 - [AIToolMemory](Classes/AIToolMemory.md)
 - [AIToolMail](Classes/AIToolMail.md)
+- [AIToolNotification](Classes/AIToolNotification.md)

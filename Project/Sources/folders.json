@@ -14,6 +14,7 @@
 			"test_image",
 			"test_mail",
 			"test_memory",
+			"test_notification",
 			"test_search",
 			"test_web_fetch",
 			"TestOpenAI"

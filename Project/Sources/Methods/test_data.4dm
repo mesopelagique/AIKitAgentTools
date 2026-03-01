@@ -15,7 +15,7 @@ var $tool:=cs:C1710.AIToolData.new({\
 	readOnly: True:C214\
 	})
 // To restrict to specific dataclasses:
-// var $tool:=cs.agtools.AITToolData.new({allowedDataclasses: ["Employee"; "Product"]; maxRecords: 10})
+// var $tool:=cs.AIToolData.new({allowedDataclasses: ["Employee"; "Product"]; maxRecords: 10})
 
 // --- Register with chat helper ---
 var $helper:=$client.chat.create(\

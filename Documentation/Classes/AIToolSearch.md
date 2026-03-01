@@ -28,7 +28,7 @@ Creates a new `AIToolSearch` instance.
 #### Example
 
 ```4d
-var $tool:=cs.agtools.AITToolSearch.new({maxResults: 3; timeout: 15})
+var $tool:=cs.agtools.AIToolSearch.new({maxResults: 3; timeout: 15})
 ```
 
 ## Tool Functions
@@ -47,7 +47,7 @@ Searches the web using DuckDuckGo. The query is sanitized (HTML tags removed, le
 #### Example
 
 ```4d
-var $tool:=cs.agtools.AITToolSearch.new({maxResults: 3})
+var $tool:=cs.agtools.AIToolSearch.new({maxResults: 3})
 
 var $helper:=$client.chat.create("You can search the web."; {model: "gpt-4o-mini"})
 $helper.autoHandleToolCalls:=True

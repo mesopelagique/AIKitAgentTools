@@ -17,6 +17,7 @@ A collection of ready-to-use AI tools for [4D AIKit](https://github.com/4d/4D-AI
 | **Calculator** | `AIToolCalculator` | Evaluate math expressions safely | `ExpressionLanguage` |
 | **Memory** | `AIToolMemory` | Key-value memory store for agents | In-memory / ORDA |
 | **Mail** | `AIToolMail` | Send emails via SMTP | `4D.SMTPTransporter` |
+| **Notification** | `AIToolNotification` | Send OS or webhook notifications | `DISPLAY NOTIFICATION`, `4D.HTTPRequest` |
 
 ## Requirements
 
@@ -38,7 +39,7 @@ var $helper:=$client.chat.create("You are a helpful assistant."; {model: "gpt-4o
 $helper.autoHandleToolCalls:=True
 
 // Create and register a tool
-var $webFetch:=cs.agtools.AITToolWebFetch.new({ \
+var $webFetch:=cs.agtools.AIToolWebFetch.new({ \
   allowedDomains: ["*.wikipedia.org"; "httpbin.org"] \
 })
 $helper.registerTools($webFetch)
@@ -51,13 +52,14 @@ var $result:=$helper.prompt("Fetch https://httpbin.org/html and summarize it.")
 
 ```4d
 // Register all tools on a single helper
-$helper.registerTools(cs.agtools.AITToolWebFetch.new({allowedDomains: ["*.wikipedia.org"]}))
-$helper.registerTools(cs.agtools.AITToolSearch.new({maxResults: 3}))
-$helper.registerTools(cs.agtools.AITToolFileSystem.new({allowedPaths: ["/tmp/sandbox/"]; readOnly: False}))
-$helper.registerTools(cs.agtools.AITToolCommand.new({allowedCommands: ["echo"; "date"; "ls"]}))
-$helper.registerTools(cs.agtools.AITToolData.new({allowedDataclasses: ["Product"]; maxRecords: 20}))
-$helper.registerTools(cs.agtools.AITToolImage.new($client; {outputFolder: Folder("/PACKAGE/images")}))
-$helper.registerTools(cs.agtools.AITToolCalculator.new())
+$helper.registerTools(cs.agtools.AIToolWebFetch.new({allowedDomains: ["*.wikipedia.org"]}))
+$helper.registerTools(cs.agtools.AIToolSearch.new({maxResults: 3}))
+$helper.registerTools(cs.agtools.AIToolFileSystem.new({allowedPaths: ["/tmp/sandbox/"]; readOnly: False}))
+$helper.registerTools(cs.agtools.AIToolCommand.new({allowedCommands: ["echo"; "date"; "ls"]}))
+$helper.registerTools(cs.agtools.AIToolData.new({allowedDataclasses: ["Product"]; maxRecords: 20}))
+$helper.registerTools(cs.agtools.AIToolImage.new($client; {outputFolder: Folder("/PACKAGE/images")}))
+$helper.registerTools(cs.agtools.AIToolCalculator.new())
+$helper.registerTools(cs.agtools.AIToolNotification.new())
 
 // The LLM orchestrates across all tools
 var $result:=$helper.prompt("Search for 4D programming, fetch the top result, and save a summary to /tmp/sandbox/summary.md")
@@ -72,7 +74,7 @@ See `demo_agent` method for a complete multi-tool example.
 Fetches web page content via `4D.HTTPRequest`.
 
 ```4d
-var $tool:=cs.agtools.AITToolWebFetch.new({ \
+var $tool:=cs.agtools.AIToolWebFetch.new({ \
   allowedDomains: ["*.wikipedia.org"]; \  // Domain whitelist (⚠️ required for security)
   timeout: 15; \
   maxResponseSize: 50000 \
@@ -86,7 +88,7 @@ var $tool:=cs.agtools.AITToolWebFetch.new({ \
 Searches the web via DuckDuckGo's HTML endpoint.
 
 ```4d
-var $tool:=cs.agtools.AITToolSearch.new({ \
+var $tool:=cs.agtools.AIToolSearch.new({ \
   maxResults: 5; \
   timeout: 10 \
 })
@@ -99,7 +101,7 @@ var $tool:=cs.agtools.AITToolSearch.new({ \
 File and folder operations using `4D.File` / `4D.Folder`.
 
 ```4d
-var $tool:=cs.agtools.AITToolFileSystem.new({ \
+var $tool:=cs.agtools.AIToolFileSystem.new({ \
   allowedPaths: ["/Users/me/project/"]; \  // Sandbox (⚠️ required)
   deniedPaths: ["*.env"; "*.key"]; \
   readOnly: True \                          // Disable writes when not needed
@@ -114,7 +116,7 @@ var $tool:=cs.agtools.AITToolFileSystem.new({ \
 Shell command execution via `4D.SystemWorker`.
 
 ```4d
-var $tool:=cs.agtools.AITToolCommand.new({ \
+var $tool:=cs.agtools.AIToolCommand.new({ \
   allowedCommands: ["echo"; "date"; "ls"; "cat"]; \  // Mandatory whitelist
   blockMetacharacters: True; \                         // Block |, ;, &&, etc.
   timeout: 10 \
@@ -129,7 +131,7 @@ var $tool:=cs.agtools.AITToolCommand.new({ \
 4D database access via ORDA.
 
 ```4d
-var $tool:=cs.agtools.AITToolData.new({ \
+var $tool:=cs.agtools.AIToolData.new({ \
   allowedDataclasses: ["Product"; "Category"]; \  // Table whitelist
   maxRecords: 50; \
   readOnly: True \
@@ -144,7 +146,7 @@ var $tool:=cs.agtools.AITToolData.new({ \
 Generate images from text prompts via the OpenAI Images API. Requires an OpenAI client instance.
 
 ```4d
-var $tool:=cs.agtools.AITToolImage.new($client; { \
+var $tool:=cs.agtools.AIToolImage.new($client; { \
   defaultModel: "dall-e-3"; \
   allowedSizes: New collection("1024x1024"); \
   outputFolder: Folder("/PACKAGE/images") \
@@ -159,13 +161,28 @@ var $tool:=cs.agtools.AITToolImage.new($client; { \
 Safe math expression evaluation via the [ExpressionLanguage](https://github.com/mesopelagique/ExpressionLanguage) component. A sandboxed alternative to giving the LLM a "run code" tool — no access to 4D commands, file I/O, network, or database.
 
 ```4d
-var $tool:=cs.agtools.AITToolCalculator.new({ \
+var $tool:=cs.agtools.AIToolCalculator.new({ \
   maxExpressionLength: 500 \
 })
 ```
 
 **Tools:** `evaluate_expression`  
 **Security:** 🟢 Lowest risk tool. Sandboxed expression engine — only registered math functions available (abs, round, sqrt, pow, log, sin/cos/tan, min, max, floor, ceil, pi, e, random). No code execution possible.
+
+### AIToolNotification
+
+Send notifications using the local OS notification center (`DISPLAY NOTIFICATION`) or an optional webhook integration.
+
+```4d
+var $tool:=cs.agtools.AIToolNotification.new({ \
+  allowedChannels: ["os"; "webhook"]; \
+  defaultChannel: "os"; \
+  webhookURL: "https://hooks.example.com/notify" \
+})
+```
+
+**Tools:** `send_notification`  
+**Security:** Channel allowlist, title/text length caps, optional webhook endpoint control.
 
 ## Documentation
 
@@ -178,6 +195,7 @@ var $tool:=cs.agtools.AITToolCalculator.new({ \
   - [AIToolData](Documentation/Classes/AIToolData.md)
   - [AIToolImage](Documentation/Classes/AIToolImage.md)
   - [AIToolCalculator](Documentation/Classes/AIToolCalculator.md)
+  - [AIToolNotification](Documentation/Classes/AIToolNotification.md)
 
 ## Roadmap
 
@@ -193,7 +211,6 @@ Ideas for tools that could be added in the future:
 | **Calendar** | Read/create/update calendar events via 4D NetKit (Google Calendar, Microsoft Outlook). |
 | **Gmail / Outlook Mail** | Extend `AIToolMail` with 4D NetKit OAuth2 providers for Gmail and Microsoft 365, replacing raw SMTP. |
 | **PTY Shell** | Execute bash commands in a real terminal PTY session using [PTY4DPlugin](https://github.com/mesopelagique/PTY4DPlugin). Unlike `AIToolCommand` (which uses `4D.SystemWorker`), a PTY session supports interactive programs, ANSI output, and persistent shell state across calls — closer to a human developer's terminal experience. |
-| **Notification** | Send push notifications, Slack messages, or webhook calls to alert users of agent progress. |
 
 > Contributions and ideas welcome — open an issue or PR.
 

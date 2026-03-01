@@ -10,8 +10,8 @@ Inspired by the [MCP Knowledge Graph Memory Server](https://github.com/modelcont
 
 | Mode | Configuration | Description |
 |------|--------------|-------------|
-| **In-memory** | `cs.agtools.AITToolMemory.new()` | Entries stored in a collection on the class instance. Lost when the process ends. |
-| **Database** | `cs.agtools.AITToolMemory.new({dataclass: "Memory"})` | Entries persisted to a 4D dataclass via ORDA. Survives restarts. |
+| **In-memory** | `cs.agtools.AIToolMemory.new()` | Entries stored in a collection on the class instance. Lost when the process ends. |
+| **Database** | `cs.agtools.AIToolMemory.new({dataclass: "Memory"})` | Entries persisted to a 4D dataclass via ORDA. Survives restarts. |
 
 ## Properties
 
@@ -40,12 +40,12 @@ When using database persistence, the tool needs to know which dataclass attribut
 
 ```4d
 // In-memory (simplest)
-var $memory:=cs.agtools.AITToolMemory.new()
+var $memory:=cs.agtools.AIToolMemory.new()
 ```
 
 ```4d
 // In-memory with limits
-var $memory:=cs.agtools.AITToolMemory.new({ \
+var $memory:=cs.agtools.AIToolMemory.new({ \
   maxEntries: 500; \
   maxKeyLength: 100; \
   maxValueLength: 10000 \
@@ -54,7 +54,7 @@ var $memory:=cs.agtools.AITToolMemory.new({ \
 
 ```4d
 // Database-persisted
-var $memory:=cs.agtools.AITToolMemory.new({ \
+var $memory:=cs.agtools.AIToolMemory.new({ \
   dataclass: "AgentMemory"; \
   fields: {key: "memKey"; value: "memValue"; category: "memCategory"}; \
   maxEntries: 5000 \
@@ -123,7 +123,7 @@ If using database persistence, create a dataclass with at least these attributes
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new()
-var $memory:=cs.agtools.AITToolMemory.new()
+var $memory:=cs.agtools.AIToolMemory.new()
 
 var $helper:=$client.chat.create("You are a helpful assistant with memory. " + \
   "Use memory_store to remember facts the user shares. " + \
@@ -146,7 +146,7 @@ $helper.prompt("What's my name?")
 
 ```4d
 var $client:=cs.AIKit.OpenAI.new()
-var $memory:=cs.agtools.AITToolMemory.new({ \
+var $memory:=cs.agtools.AIToolMemory.new({ \
   dataclass: "AgentMemory"; \
   maxEntries: 10000 \
 })

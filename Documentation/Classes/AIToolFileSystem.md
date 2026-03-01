@@ -29,13 +29,13 @@ The `AIToolFileSystem` class provides file and folder operations using `4D.File`
 
 ```4d
 // Sandboxed read-write access
-var $tool:=cs.agtools.AITToolFileSystem.new({ \
+var $tool:=cs.agtools.AIToolFileSystem.new({ \
   allowedPaths: ["/Users/me/project/output/"]; \
   readOnly: False \
 })
 
 // Read-only access to a project
-var $readOnly:=cs.agtools.AITToolFileSystem.new({ \
+var $readOnly:=cs.agtools.AIToolFileSystem.new({ \
   allowedPaths: ["/Users/me/project/"]; \
   readOnly: True \
 })
@@ -118,7 +118,7 @@ var $readOnly:=cs.agtools.AITToolFileSystem.new({ \
 #### Example
 
 ```4d
-var $tool:=cs.agtools.AITToolFileSystem.new({ \
+var $tool:=cs.agtools.AIToolFileSystem.new({ \
   allowedPaths: ["/tmp/sandbox/"]; \
   readOnly: False \
 })
