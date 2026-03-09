@@ -36,6 +36,9 @@ Any text the LLM reads from external sources (web pages, search results, files, 
 | **Memory** | 🟡 Medium | Data poisoning, prompt injection persistence, PII storage, storage exhaustion | Entry limit, key/value length caps, category isolation |
 | **Mail** | 🔴 Critical | Spam/phishing, data exfiltration via email, impersonation, abuse | Recipient domain whitelist, locked from address, recipient cap, body length limit |
 | **Notification** | 🟡 Medium | Alert spam/flooding, social engineering, webhook abuse/exfiltration | Channel allowlist, title/text caps, fixed webhook endpoint, rate limiting/human approval |
+| **Approval** | 🟠 High | Approval bypass, unsafe broad allow rules, policy poisoning | Deny-first evaluation, structured matchers, TTL/maxUses, audit logs |
+| **Planning** | 🟡 Medium | Unsafe plans, over-broad actions, cascading failures | Schema validation, DAG checks, bounded execution, fail-fast mode |
+| **SubAgent** | 🟠 High | Tool-scope escape, uncontrolled fan-out, hidden side effects | Explicit tool allowlists, no nested creation, runtime limits, provenance logs |
 
 ---
 
@@ -187,6 +190,9 @@ Using `sudo`, `su`, `doas`, or exploiting SUID binaries to gain elevated privile
 **Data Exfiltration via Command Output**
 The LLM reads command output and may be instructed (via prompt injection in the output itself) to send it elsewhere.
 
+**PTY Session Side Effects**
+When PTY backend is enabled, shell startup files, prompts, and interactive behavior can add noisy output or environment-specific side effects if not tightly controlled.
+
 #### Mitigations
 
 | Protection | Configuration | Description |
@@ -196,6 +202,7 @@ The LLM reads command output and may be instructed (via prompt injection in the 
 | Timeout | `timeout: 10` | Kill long-running commands. |
 | Output size cap | `maxOutputSize: 50000` | Prevent memory exhaustion. |
 | Working directory | `workingDirectory: "/tmp/safe/"` | Limit file visibility. |
+| Backend policy | `executionBackend: "auto"` + `forceSystemWorker` | Use PTY only when needed; force `SystemWorker` in locked-down environments. |
 
 **Recommended secure configuration:**
 ```4d
@@ -443,6 +450,9 @@ If the `fromAddress` is not locked, the LLM can set any sender address. Even wit
 **Unintended Mass Mailing**
 Without recipient limits, the LLM could add dozens of CC/BCC recipients, turning a single email into a mass mailing that damages the sender's reputation and domain deliverability.
 
+**OAuth Scope and Token Abuse (Gmail/Outlook via NetKit)**
+If OAuth scopes are too broad, a compromised agent can send high-impact emails under delegated identity. Insecure token storage can also expose refresh/access tokens to lateral abuse.
+
 **Prompt Injection → Email Chain**
 Combined with other tools, this becomes especially dangerous:
 - Fetch a page with prompt injection → LLM sends an email with exfiltrated data
@@ -459,6 +469,8 @@ Combined with other tools, this becomes especially dangerous:
 | Subject length cap | `maxSubjectLength: 500` | Prevent abuse via extremely long subjects. |
 | Body length cap | `maxBodyLength: 50000` | Prevent huge emails or data dumps. |
 | No attachments | *Built-in (current version)* | The tool does not support attachments, reducing data exfiltration surface. |
+| OAuth least privilege | `oauth2.scope` (NetKit modes) | Request minimal provider scopes (`Mail.Send` only when possible). |
+| Token handling controls | App architecture | Store and rotate OAuth tokens securely; avoid exposing token objects to LLM text context. |
 
 > **⚠️ Email Tool Guidance:**
 > - **Always** set `allowedRecipientDomains` — never leave it empty in production.
@@ -467,6 +479,7 @@ Combined with other tools, this becomes especially dangerous:
 > - Consider human-in-the-loop confirmation before actually sending emails.
 > - Monitor sent email logs for unusual patterns.
 > - If possible, use a dedicated SMTP account with rate limiting on the server side.
+> - For Gmail/Outlook modes, constrain OAuth scopes and secure refresh token storage.
 
 **Recommended secure configuration:**
 ```4d
@@ -535,6 +548,81 @@ var $notify:=cs.agtools.AIToolNotification.new({ \
 
 ---
 
+### ApprovalEngine / AIToolApproval
+
+#### Threats
+
+**Approval Bypass**
+If protected tools can execute without consulting the engine, policy enforcement can be bypassed.
+
+**Policy Poisoning**
+Overly broad saved rules (e.g. wildcard command/path patterns) can silently authorize dangerous operations later.
+
+**Replay/Tampering**
+If approvals are not bound to operation fingerprints, attackers can reuse approvals for different payloads.
+
+#### Mitigations
+
+| Protection | Configuration | Description |
+|------------|---------------|-------------|
+| Deny-first evaluation | *Built-in* | Matching deny rules are enforced before allow rules. |
+| Structured matcher rules | `tool/action/targetType/targetPattern` | Avoid free-text authorization logic. |
+| TTL + max uses | `ttlSeconds`, `maxUses` | Automatically expire and constrain reusable rules. |
+| Fingerprint binding | *Built-in* | One-shot approvals are tied to exact operation fingerprints. |
+| Audit fields | `decidedBy`, `decisionReason` | Keep human decision trail. |
+
+> Guidance:
+> - Keep saved rules as narrow as possible.
+> - Prefer one-shot approvals for destructive operations.
+> - Review and prune stale rules regularly.
+
+---
+
+### AIToolPlanning
+
+#### Threats
+
+**Unsafe Plan Generation**
+A generated plan can include steps that are inappropriate or high-risk for the environment.
+
+**Graph Explosion / Resource Overuse**
+Large plans or over-parallelized execution can create excessive token/tool usage.
+
+#### Mitigations
+
+| Protection | Configuration | Description |
+|------------|---------------|-------------|
+| Plan schema validation | `validate_plan` | Reject malformed plans before execution. |
+| DAG safety checks | *Built-in* | Detect unknown dependencies and cycles. |
+| Step caps | `maxSteps` | Bound plan size and execution footprint. |
+| Controlled failure strategy | `fail_fast` / `continue_with_warnings` | Prevent silent cascading failures. |
+
+---
+
+### AIToolSubAgent
+
+#### Threats
+
+**Tool Scope Escape**
+Sub-agents could execute tools outside their intended capabilities without strict registration controls.
+
+**Unbounded Fan-out**
+Parallel sub-agent runs can multiply cost and side effects quickly.
+
+**Opaque Side Effects**
+Without per-run provenance, parent orchestration cannot reliably audit child actions.
+
+#### Mitigations
+
+| Protection | Configuration | Description |
+|------------|---------------|-------------|
+| Explicit allowed tool list | `allowedTools` + registry | Child agents can only use named, registered tools. |
+| No nested creation by default | `allowNestedCreation: False` | Prevent recursive agent spawning. |
+| Runtime limits | `maxToolCalls`, `timeoutSec`, `maxTokens`, `maxParallel` | Bound execution and cost. |
+| Run logging | `subagent_get_result` + run metadata | Preserve traceability and debugging context. |
+
+---
+
 ## Multi-Tool Risks
 
 When multiple tools are registered, attack chains become possible:
@@ -573,6 +661,13 @@ Before deploying tools in production:
 - [ ] `AIToolNotification` keeps `allowedChannels` minimal (`["os"]` unless webhook is required)
 - [ ] `AIToolNotification` webhook endpoint is fixed in configuration (not model-controlled)
 - [ ] Notification rate limits and approval gates are in place for high-impact alerts
+- [ ] `ApprovalEngine` deny rules are evaluated before allow rules
+- [ ] Saved approval rules use narrow structured matchers (avoid broad wildcards)
+- [ ] Approval rules have bounded `ttlSeconds` and `maxUses`
+- [ ] Approval decisions include `decidedBy` and reason for auditability
+- [ ] `AIToolSubAgent` uses explicit tool allowlists per child agent
+- [ ] Nested sub-agent creation remains disabled unless explicitly required
+- [ ] Sub-agent runtime limits (`maxParallel`, `timeoutSec`, `maxToolCalls`) are configured conservatively
 - [ ] Human-in-the-loop review is enabled for destructive operations (delete, write, execute)
 - [ ] Logging is enabled to audit tool usage
 
@@ -588,3 +683,6 @@ Before deploying tools in production:
 - [AIToolMemory](Classes/AIToolMemory.md)
 - [AIToolMail](Classes/AIToolMail.md)
 - [AIToolNotification](Classes/AIToolNotification.md)
+- [AIToolApproval](Classes/AIToolApproval.md)
+- [AIToolPlanning](Classes/AIToolPlanning.md)
+- [AIToolSubAgent](Classes/AIToolSubAgent.md)

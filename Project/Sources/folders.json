@@ -7,15 +7,20 @@
 	},
 	"tests": {
 		"methods": [
+			"test_approval",
 			"test_calculator",
 			"test_command",
+			"test_command_backend",
 			"test_data",
 			"test_filesystem",
 			"test_image",
 			"test_mail",
+			"test_mail_netkit",
 			"test_memory",
 			"test_notification",
+			"test_planning",
 			"test_search",
+			"test_subagent",
 			"test_web_fetch",
 			"TestOpenAI"
 		]

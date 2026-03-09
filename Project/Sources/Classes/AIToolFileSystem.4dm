@@ -11,6 +11,7 @@ property allowedPaths : Collection
 property deniedPaths : Collection
 property readOnly : Boolean
 property maxFileSize : Integer
+property _approvalEngine : Object
 
 Class constructor($config : Object)
 	
@@ -23,6 +24,12 @@ Class constructor($config : Object)
 	This.deniedPaths:=($config.deniedPaths#Null) ? $config.deniedPaths : New collection("*.env"; "*.pem"; "*.key"; "*.secret"; "*/.git/*"; "*/node_modules/*")
 	This.readOnly:=Bool($config.readOnly)
 	This.maxFileSize:=($config.maxFileSize#Null) ? $config.maxFileSize : 500000  // 500KB default
+	If (($config.approvalEngine#Null) & (OB Instance of($config.approvalEngine; cs.ApprovalEngine)))
+		This._approvalEngine:=$config.approvalEngine
+	Else 
+		var $approvalConfig : Object:=($config.approvalConfig#Null) ? $config.approvalConfig : {}
+		This._approvalEngine:=cs.ApprovalEngine.new($approvalConfig)
+	End if 
 	
 	// --- Tool definitions ---
 	This.tools:=[]
@@ -204,6 +211,11 @@ Function write_file($params : Object) : Text
 	If (Not(This._isPathAllowed($path)))
 		return "Error: Path '"+$path+"' is outside the allowed scope."
 	End if 
+
+	var $approval : Object:=This._checkApproval("write_file"; "Write file: "+$path; "path"; $path; {file_path: $path; contentLength: Length($content)})
+	If ($approval#Null)
+		return JSON Stringify($approval; *)
+	End if 
 	
 	Try
 		var $file:=File($path; fk posix path)
@@ -222,6 +234,11 @@ Function create_directory($params : Object) : Text
 	
 	If (Not(This._isPathAllowed($path)))
 		return "Error: Path '"+$path+"' is outside the allowed scope."
+	End if 
+
+	var $approval : Object:=This._checkApproval("create_directory"; "Create directory: "+$path; "path"; $path; {path: $path})
+	If ($approval#Null)
+		return JSON Stringify($approval; *)
 	End if 
 	
 	Try
@@ -249,6 +266,11 @@ Function delete_file($params : Object) : Text
 	If (Not($file.exists))
 		return "Error: File '"+$path+"' not found."
 	End if 
+
+	var $approval : Object:=This._checkApproval("delete_file"; "Delete file: "+$path; "path"; $path; {file_path: $path})
+	If ($approval#Null)
+		return JSON Stringify($approval; *)
+	End if 
 	
 	Try
 		$file.delete()
@@ -270,6 +292,11 @@ Function move_item($params : Object) : Text
 	End if 
 	If (Not(This._isPathAllowed($destination)))
 		return "Error: Destination path '"+$destination+"' is outside the allowed scope."
+	End if 
+
+	var $approval : Object:=This._checkApproval("move_item"; "Move item: "+$source+" -> "+$destination; "path"; $destination; {source_path: $source; destination_path: $destination})
+	If ($approval#Null)
+		return JSON Stringify($approval; *)
 	End if 
 	
 	Try
@@ -311,6 +338,11 @@ Function copy_file($params : Object) : Text
 	var $file:=File($source; fk posix path)
 	If (Not($file.exists))
 		return "Error: Source file '"+$source+"' not found."
+	End if 
+
+	var $approval : Object:=This._checkApproval("copy_file"; "Copy file: "+$source+" -> "+$destination; "path"; $destination; {source_path: $source; destination_path: $destination})
+	If ($approval#Null)
+		return JSON Stringify($approval; *)
 	End if 
 	
 	Try
@@ -360,4 +392,19 @@ Function _isPathAllowed($path : Text) : Boolean
 	End for each 
 	
 	return False
+
+Function _checkApproval($action : Text; $summary : Text; $targetType : Text; $targetValue : Text; $payload : Object) : Object
+
+	var $decision : Object:=This._approvalEngine.evaluate({ \
+		tool: "AIToolFileSystem"; \
+		action: $action; \
+		summary: $summary; \
+		targetType: $targetType; \
+		targetValue: $targetValue; \
+		payload: $payload \
+	})
+	If ($decision.status#"allowed")
+		return $decision
+	End if 
+	return Null
 	

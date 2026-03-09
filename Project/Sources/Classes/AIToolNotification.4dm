@@ -22,6 +22,7 @@ property webhookURL : Text
 property webhookTimeout : Integer
 property webhookHeaders : Object
 property dryRun : Boolean
+property _approvalEngine : Object
 
 Class constructor($config : Object)
 
@@ -75,6 +76,12 @@ Class constructor($config : Object)
 		This.webhookHeaders:=$config.webhookHeaders
 	End if
 	This.dryRun:=($config.dryRun#Null) ? Bool($config.dryRun) : False
+	If (($config.approvalEngine#Null) & (OB Instance of($config.approvalEngine; cs.ApprovalEngine)))
+		This._approvalEngine:=$config.approvalEngine
+	Else 
+		var $approvalConfig : Object:=($config.approvalConfig#Null) ? $config.approvalConfig : {}
+		This._approvalEngine:=cs.ApprovalEngine.new($approvalConfig)
+	End if
 
 	// --- Tool definition ---
 	This.tools:=[]
@@ -121,6 +128,21 @@ Function send_notification($params : Object) : Text
 
 	If (Not(This._isChannelAllowed($channel)))
 		return "Error: channel '"+$channel+"' is not allowed. Allowed: "+This.allowedChannels.join(", ")
+	End if
+
+	// --- Human approval gate ---
+	var $targetValue : Text:=($channel="webhook") ? This.webhookURL : "local-os"
+	var $targetType : Text:=($channel="webhook") ? "domain" : "recipient"
+	var $approval : Object:=This._approvalEngine.evaluate({ \
+		tool: "AIToolNotification"; \
+		action: "send_notification"; \
+		summary: "Send "+$channel+" notification: "+$title; \
+		targetType: $targetType; \
+		targetValue: $targetValue; \
+		payload: {channel: $channel; title: $title; textLength: Length($text)} \
+	})
+	If ($approval.status#"allowed")
+		return JSON Stringify($approval; *)
 	End if
 
 	Case of
